@@ -1,6 +1,6 @@
 {
     "name": "bancorx",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "BancorX Utility",
     "main": "index.js",
     "types": "index.d.ts",
@@ -8,6 +8,12 @@
         "index.js",
         "index.d.ts",
         "index.js.map"
+    ],
+    "keywords": [
+        "bancor",
+        "bancorx",
+        "eos",
+        "eosio"
     ],
     "repository": "git@github.com:eos-nation/bancorx.git",
     "author": "Denis Carriere <denis@eosnation.io>",
