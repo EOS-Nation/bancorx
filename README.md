@@ -32,11 +32,15 @@ import * as bancorx from "bancorx";
 
 ## BancorX Formula
 
-> token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
-> token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
-> The Formula:
-> 10.0000 / (77814.0638 + 10.0000) * 429519.5539120331
-> 55.19109809221157
+- token balance of EOS (`eosio.token`) in the relay: `77814.0638 EOS`
+- token balance of BNT (`bntbntbntbnt`) in the relay: `429519.5539120331 BNT`
+
+**The Formula:**
+
+```js
+10.0000 / (77814.0638 + 10.0000) * 429519.5539120331
+55.19109809221157
+```
 
 ```js
 const source_balance = 77814.0638 // EOS
