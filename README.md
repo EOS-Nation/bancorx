@@ -91,6 +91,8 @@ bancorx.relays.CUSD
 
 ## Get Relay Balances
 
+[`eosjs`](https://github.com/EOSIO/eosjs) is required to use `get_currency_balance` method.
+
 ```js
 const {code, account, symbol} = bancorx.relays.CUSD;
 const balance = await rpc.get_currency_balance(code, account, symbol);
