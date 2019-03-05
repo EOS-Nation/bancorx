@@ -1,3 +1,9 @@
+# Typescript
+*.js
+*.js.map
+*.d.ts
+!jest.config.js
+
 # Logs
 logs
 *.log
