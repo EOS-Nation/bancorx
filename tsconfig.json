@@ -13,6 +13,5 @@
         /* Module Resolution Options */
         "esModuleInterop": true
     },
-    "files": ["index.ts"],
-    "include": ["__tests__/**/*.ts"]
+    "files": ["index.ts"]
 }
