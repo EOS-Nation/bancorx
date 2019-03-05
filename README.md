@@ -1,6 +1,8 @@
 # BancorX utility
 
 > Collection of useful Javascript (Typescript) methods used for [BancorX](https://eos.bancor.network).
+>
+> Wallet (Lynx/Scatter, etc...) `transfer` actions are not included.
 
 ## Install
 
