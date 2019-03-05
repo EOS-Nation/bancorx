@@ -1,52 +1,108 @@
 /**
  * Bancor Formula
  *
+ * token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
+ * token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
+ *
+ * Formula:
+ * 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
+ * //=> 5.519748143058556
+ *
+ * @param {number} balance_from from token balance in the relay
+ * @param {number} balance_to to token balance in the relay
+ * @param {number} amount amount to convert
+ * @returns {number} computed amount
  * @example
  *
- * // token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
- * // token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
- * // The Formula:
- * // 10.0000 / (77814.0638 + 10.0000) * 429519.5539120331
- * // 55.19109809221157
+ * const balance_from = 77814.0638 // EOS
+ * const balance_to = 429519.5539120331 // BNT
+ * const amount = 1
  *
- * const source_balance = 77814.0638 // EOS
- * const target_balance = 429519.5539120331 // BNT
- * const source_amount = 10
- * bancorFormula(source_balance, target_balance, source_amount)
- * //=> 55.19109809221157
+ * bancorx.bancorFormula(balance_from, balance_to, amount)
+ * //=> 5.519748143058556
  */
 export function bancorFormula(
-    source_balance: number,
-    target_balance: number,
-    source_amount = 1,
+    balance_from: number,
+    balance_to: number,
+    amount: number,
 ) {
-    return source_amount / (source_balance + source_amount) * target_balance;
+    return amount / (balance_from + amount) * balance_to;
+}
+
+/**
+ * Bancor Inverse Formula
+ *
+ * token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
+ * token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
+ *
+ * Inverse Formula:
+ * 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
+ * //=> 0.18116577989712823
+ *
+ * @param {number} balance_from from token balance in the relay
+ * @param {number} balance_to to token balance in the relay
+ * @param {number} amount_desired amount to desired
+ * @returns {number} computed desired amount
+ * @example
+ *
+ * const balance_from = 77814.0638 // EOS
+ * const balance_to = 429519.5539120331 // BNT
+ * const amount_desired = 1
+ *
+ * bancorx.bancorInverseFormula(balance_from, balance_to, amount_desired)
+ * //=> 0.18116577989712823
+ */
+export function bancorInverseFormula(
+    balance_from: number,
+    balance_to: number,
+    amount_desired: number,
+) {
+    return balance_from / (1.0 - amount_desired / balance_to) - balance_from;
 }
 
 /**
  * Parse Memo
  *
+ * @param {Relay[]} converters relay converters
+ * @param {number} min_return minimum return
+ * @param {string} dest_account destination acccount
+ * @param {number} [version] bancor protocol version
+ * @returns {string} computed memo
  * @example
  *
- * const memo = parseMemo("bnt2eoscnvrt BNT bancorc11144 CUSD", "3.17", "b1")
- * //=> "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,b1"
+ * const CUSD = bancorx.relays.CUSD;
+ * const BNT = bancorx.relays.BNT;
+ *
+ * // Single converter (BNT => CUSD)
+ * bancorx.parseMemo([CUSD], "3.17", "<account>")
+ * //=> "1,bancorc11144 CUSD,3.17,<account>"
+ *
+ * // Multi converter (EOS => BNT => CUSD)
+ * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
+ * //=> "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
 export function parseMemo(
-    receiver: string,
+    converters: Converter[],
     min_return: string,
     dest_account: string,
     version= 1,
 ) {
+    const receiver = converters.map(({account, symbol}) => {
+        return `${account} ${symbol}`;
+    }).join(" ");
+
     return `${version},${receiver},${min_return},${dest_account}`;
 }
+
 /**
  * Parse Balance
  *
- * @private
+ * @param {string|number} balance token balance
+ * @returns {Object} parsed balance
  * @example
  *
- * parseBalance("10.0000 EOS") //=> {quantity: 10.0, symbol: "EOS"}
- * parseBalance(10.0) //=> {quantity: 10.0}
+ * bancorx.parseBalance("10.0000 EOS") //=> {quantity: 10.0, symbol: "EOS"}
+ * bancorx.parseBalance(10.0) //=> {quantity: 10.0}
  */
 export function parseBalance(balance: string | number) {
     if (typeof balance === "number") { return {quantity: balance}; }
@@ -54,34 +110,18 @@ export function parseBalance(balance: string | number) {
     return {quantity: Number(quantity), symbol};
 }
 
-export interface Relay {
-    code: string;
-    account: string;
-    symbol: string;
-    precision: number;
-}
-
-export interface Relays {
-    EOS: Relay;
-    BNT: Relay;
-    ZOS: Relay;
-    IQ: Relay;
-    PGL: Relay;
-    CUSD: Relay;
-    DICE: Relay;
-    BLACK: Relay;
-    CET: Relay;
-    EPRA: Relay;
-    MEETONE: Relay;
-    ZKS: Relay;
-    OCT: Relay;
-    KARMA: Relay;
-    HVT: Relay;
-    HORUS: Relay;
-    MEV: Relay;
-    [relay: string]: Relay;
-}
-
+/**
+ * Relays
+ *
+ * @example
+ *
+ * bancorx.relays.BNT
+ * //=> { code: "bntbntbntbnt", account: "bnt2eoscnvrt", symbol: "BNT", precision: 10 }
+ *
+ * bancorx.relays.CUSD
+ * //=> { code: "stablecarbon", account: "bancorc11144", symbol: "CUSD", precision: 2 }
+ *
+ */
 export const relays: Relays = {
     EOS: {
         code: "eosio.token",
@@ -186,3 +226,36 @@ export const relays: Relays = {
         precision: 4,
     },
 };
+
+export interface Relay {
+    code: string;
+    account: string;
+    symbol: string;
+    precision: number;
+}
+
+export interface Relays {
+    EOS: Relay;
+    BNT: Relay;
+    ZOS: Relay;
+    IQ: Relay;
+    PGL: Relay;
+    CUSD: Relay;
+    DICE: Relay;
+    BLACK: Relay;
+    CET: Relay;
+    EPRA: Relay;
+    MEETONE: Relay;
+    ZKS: Relay;
+    OCT: Relay;
+    KARMA: Relay;
+    HVT: Relay;
+    HORUS: Relay;
+    MEV: Relay;
+    [relay: string]: Relay;
+}
+
+export interface Converter {
+    account: string;
+    symbol: string;
+}
