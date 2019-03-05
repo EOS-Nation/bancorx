@@ -59,6 +59,26 @@ const memo = bancorx.parseMemo("bnt2eoscnvrt BNT bancorc11144 CUSD", "3.17", "b1
 
 ## Relays
 
+| **symbol** | **code**     | **account**  | **symbol** |
+|------------|--------------|--------------|------------|
+| EOS        | eosio.token  | bnt2eoscnvrt | 4          |
+| BNT        | bntbntbntbnt | bnt2eoscnvrt | 10         |
+| ZOS        | zosdiscounts | bancorc11151 | 4          |
+| IQ         | everipediaiq | bancorc11123 | 3          |
+| PGL        | prospectorsg | bancorc11113 | 4          |
+| CUSD       | stablecarbon | bancorc11144 | 2          |
+| DICE       | betdicetoken | bancorc11125 | 2          |
+| BLACK      | eosblackteam | bancorc11111 | 4          |
+| CET        | eosiochaince | bancorc11114 | 4          |
+| EPRA       | epraofficial | bancorc11124 | 4          |
+| MEETONE    | eosiomeetone | bancorc11122 | 4          |
+| ZKS        | zkstokensr4u | bancorc11142 | 0          |
+| OCT        | octtothemoon | bancorc11132 | 4          |
+| KARMA      | therealkarma | bancorc11112 | 4          |
+| HVT        | hirevibeshvt | bancorc11131 | 4          |
+| HORUS      | horustokenio | bancorc11121 | 4          |
+| MEV        | eosvegascoin | bancorc11134 | 4          |
+
 ```js
 bancorx.relays.CUSD
 // {
