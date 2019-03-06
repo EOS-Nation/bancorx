@@ -4,9 +4,11 @@
  * - token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
  * - token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
  *
- * > Formula:
- * > 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
- * > //=> 5.519748143058556
+ * ```js
+ * Formula:
+ * 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
+ * //=> 5.519748143058556
+ * ```
  *
  * @param {number} balance_from from token balance in the relay
  * @param {number} balance_to to token balance in the relay
@@ -35,9 +37,11 @@ export function bancorFormula(
  * - token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
  * - token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
  *
- * > Inverse Formula:
- * > 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
- * > //=> 0.18116577989712823
+ * ```js
+ * Inverse Formula:
+ * 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
+ * //=> 0.18116577989712823
+ * ```
  *
  * @param {number} balance_from from token balance in the relay
  * @param {number} balance_to to token balance in the relay
