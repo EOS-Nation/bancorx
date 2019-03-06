@@ -67,7 +67,7 @@ export function bancorInverseFormula(
 /**
  * Parse Memo
  *
- * @param {Relay[]} converters relay converters
+ * @param {Converter[]} converters relay converters
  * @param {number} min_return minimum return
  * @param {string} dest_account destination acccount
  * @param {number} [version] bancor protocol version
