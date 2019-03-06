@@ -33,7 +33,7 @@ test("bancorx.parseMemo", () => {
 
 });
 
-test("bancorx.parseMemo", () => {
+test("bancorx.parseBalance", () => {
     expect(bancorx.parseBalance("10.0000 EOS")).toEqual({quantity: 10.0, symbol: "EOS"});
     expect(bancorx.parseBalance(10.0)).toEqual({quantity: 10.0});
 });

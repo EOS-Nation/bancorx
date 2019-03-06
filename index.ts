@@ -7,7 +7,7 @@
  * ```js
  * Formula:
  * 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
- * //=> 5.519748143058556
+ * // => 5.519748143058556
  * ```
  *
  * @param {number} balanceFrom from token balance in the relay
@@ -21,7 +21,7 @@
  * const amount = 1
  *
  * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
- * //=> 5.519748143058556
+ * // => 5.519748143058556
  */
 export function bancorFormula(
     balanceFrom: number,
@@ -40,7 +40,7 @@ export function bancorFormula(
  * ```js
  * Inverse Formula:
  * 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
- * //=> 0.18116577989712823
+ * // => 0.18116577989712823
  * ```
  *
  * @param {number} balanceFrom from token balance in the relay
@@ -54,7 +54,7 @@ export function bancorFormula(
  * const amountDesired = 1
  *
  * bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
- * //=> 0.18116577989712823
+ * // => 0.18116577989712823
  */
 export function bancorInverseFormula(
     balanceFrom: number,
@@ -79,11 +79,11 @@ export function bancorInverseFormula(
  *
  * // Single converter (BNT => CUSD)
  * bancorx.parseMemo([CUSD], "3.17", "<account>")
- * //=> "1,bancorc11144 CUSD,3.17,<account>"
+ * // => "1,bancorc11144 CUSD,3.17,<account>"
  *
  * // Multi converter (EOS => BNT => CUSD)
  * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
- * //=> "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
+ * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
 export function parseMemo(
     converters: Converter[],
@@ -105,8 +105,8 @@ export function parseMemo(
  * @returns {Object} parsed balance
  * @example
  *
- * bancorx.parseBalance("10.0000 EOS") //=> {quantity: 10.0, symbol: "EOS"}
- * bancorx.parseBalance(10.0) //=> {quantity: 10.0}
+ * bancorx.parseBalance("10.0000 EOS") // => {quantity: 10.0, symbol: "EOS"}
+ * bancorx.parseBalance(10.0) // => {quantity: 10.0}
  */
 export function parseBalance(balance: string | number) {
     if (typeof balance === "number") { return {quantity: balance}; }
@@ -120,10 +120,10 @@ export function parseBalance(balance: string | number) {
  * @example
  *
  * bancorx.relays.BNT
- * //=> { code: "bntbntbntbnt", account: "bnt2eoscnvrt", symbol: "BNT", precision: 10 }
+ * // => { code: "bntbntbntbnt", account: "bnt2eoscnvrt", symbol: "BNT", precision: 10 }
  *
  * bancorx.relays.CUSD
- * //=> { code: "stablecarbon", account: "bancorc11144", symbol: "CUSD", precision: 2 }
+ * // => { code: "stablecarbon", account: "bancorc11144", symbol: "CUSD", precision: 2 }
  *
  */
 export const relays: Relays = {

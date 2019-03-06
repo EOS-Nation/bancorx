@@ -61,6 +61,7 @@ import * as bancorx from "bancorx";
 ```js
 const {code, account, symbol} = bancorx.relays.CUSD;
 const balance = await rpc.get_currency_balance(code, account, symbol);
+// => [ '24874.22 CUSD' ]
 ```
 
 ## API
@@ -94,7 +95,7 @@ Bancor Formula
 ```js
 Formula:
 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
-//=> 5.519748143058556
+// => 5.519748143058556
 ```
 
 #### Parameters
@@ -111,7 +112,7 @@ const balanceTo = 429519.5539120331 // BNT
 const amount = 1
 
 bancorx.bancorFormula(balanceFrom, balanceTo, amount)
-//=> 5.519748143058556
+// => 5.519748143058556
 ```
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed amount
@@ -126,7 +127,7 @@ Bancor Inverse Formula
 ```js
 Inverse Formula:
 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
-//=> 0.18116577989712823
+// => 0.18116577989712823
 ```
 
 #### Parameters
@@ -143,7 +144,7 @@ const balanceTo = 429519.5539120331 // BNT
 const amountDesired = 1
 
 bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
-//=> 0.18116577989712823
+// => 0.18116577989712823
 ```
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed desired amount
@@ -167,11 +168,11 @@ const BNT = bancorx.relays.BNT;
 
 // Single converter (BNT => CUSD)
 bancorx.parseMemo([CUSD], "3.17", "<account>")
-//=> "1,bancorc11144 CUSD,3.17,<account>"
+// => "1,bancorc11144 CUSD,3.17,<account>"
 
 // Multi converter (EOS => BNT => CUSD)
 bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
-//=> "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
+// => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
 ```
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** computed memo
@@ -187,8 +188,8 @@ Parse Balance
 #### Examples
 
 ```javascript
-bancorx.parseBalance("10.0000 EOS") //=> {quantity: 10.0, symbol: "EOS"}
-bancorx.parseBalance(10.0) //=> {quantity: 10.0}
+bancorx.parseBalance("10.0000 EOS") // => {quantity: 10.0, symbol: "EOS"}
+bancorx.parseBalance(10.0) // => {quantity: 10.0}
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** parsed balance
@@ -201,8 +202,8 @@ Relays
 
 ```javascript
 bancorx.relays.BNT
-//=> { code: "bntbntbntbnt", account: "bnt2eoscnvrt", symbol: "BNT", precision: 10 }
+// => { code: "bntbntbntbnt", account: "bnt2eoscnvrt", symbol: "BNT", precision: 10 }
 
 bancorx.relays.CUSD
-//=> { code: "stablecarbon", account: "bancorc11144", symbol: "CUSD", precision: 2 }
+// => { code: "stablecarbon", account: "bancorc11144", symbol: "CUSD", precision: 2 }
 ```
