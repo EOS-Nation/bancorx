@@ -10,25 +10,25 @@
  * //=> 5.519748143058556
  * ```
  *
- * @param {number} balance_from from token balance in the relay
- * @param {number} balance_to to token balance in the relay
+ * @param {number} balanceFrom from token balance in the relay
+ * @param {number} balanceTo to token balance in the relay
  * @param {number} amount amount to convert
  * @returns {number} computed amount
  * @example
  *
- * const balance_from = 77814.0638 // EOS
- * const balance_to = 429519.5539120331 // BNT
+ * const balanceFrom = 77814.0638 // EOS
+ * const balanceTo = 429519.5539120331 // BNT
  * const amount = 1
  *
- * bancorx.bancorFormula(balance_from, balance_to, amount)
+ * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
  * //=> 5.519748143058556
  */
 export function bancorFormula(
-    balance_from: number,
-    balance_to: number,
+    balanceFrom: number,
+    balanceTo: number,
     amount: number,
 ) {
-    return amount / (balance_from + amount) * balance_to;
+    return amount / (balanceFrom + amount) * balanceTo;
 }
 
 /**
@@ -43,33 +43,33 @@ export function bancorFormula(
  * //=> 0.18116577989712823
  * ```
  *
- * @param {number} balance_from from token balance in the relay
- * @param {number} balance_to to token balance in the relay
- * @param {number} amount_desired amount to desired
+ * @param {number} balanceFrom from token balance in the relay
+ * @param {number} balanceTo to token balance in the relay
+ * @param {number} amountDesired amount to desired
  * @returns {number} computed desired amount
  * @example
  *
- * const balance_from = 77814.0638 // EOS
- * const balance_to = 429519.5539120331 // BNT
- * const amount_desired = 1
+ * const balanceFrom = 77814.0638 // EOS
+ * const balanceTo = 429519.5539120331 // BNT
+ * const amountDesired = 1
  *
- * bancorx.bancorInverseFormula(balance_from, balance_to, amount_desired)
+ * bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
  * //=> 0.18116577989712823
  */
 export function bancorInverseFormula(
-    balance_from: number,
-    balance_to: number,
-    amount_desired: number,
+    balanceFrom: number,
+    balanceTo: number,
+    amountDesired: number,
 ) {
-    return balance_from / (1.0 - amount_desired / balance_to) - balance_from;
+    return balanceFrom / (1.0 - amountDesired / balanceTo) - balanceFrom;
 }
 
 /**
  * Parse Memo
  *
  * @param {Converter[]} converters relay converters
- * @param {number} min_return minimum return
- * @param {string} dest_account destination acccount
+ * @param {number} minReturn minimum return
+ * @param {string} destAccount destination acccount
  * @param {number} [version=1] bancor protocol version
  * @returns {string} computed memo
  * @example
@@ -87,15 +87,15 @@ export function bancorInverseFormula(
  */
 export function parseMemo(
     converters: Converter[],
-    min_return: string,
-    dest_account: string,
+    minReturn: string,
+    destAccount: string,
     version= 1,
 ) {
     const receiver = converters.map(({account, symbol}) => {
         return `${account} ${symbol}`;
     }).join(" ");
 
-    return `${version},${receiver},${min_return},${dest_account}`;
+    return `${version},${receiver},${minReturn},${destAccount}`;
 }
 
 /**

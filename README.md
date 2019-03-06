@@ -99,18 +99,18 @@ Formula:
 
 #### Parameters
 
--   `balance_from` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
--   `balance_to` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
+-   `balanceFrom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
+-   `balanceTo` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
 -   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to convert
 
 #### Examples
 
 ```javascript
-const balance_from = 77814.0638 // EOS
-const balance_to = 429519.5539120331 // BNT
+const balanceFrom = 77814.0638 // EOS
+const balanceTo = 429519.5539120331 // BNT
 const amount = 1
 
-bancorx.bancorFormula(balance_from, balance_to, amount)
+bancorx.bancorFormula(balanceFrom, balanceTo, amount)
 //=> 5.519748143058556
 ```
 
@@ -131,18 +131,18 @@ Inverse Formula:
 
 #### Parameters
 
--   `balance_from` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
--   `balance_to` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
--   `amount_desired` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to desired
+-   `balanceFrom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
+-   `balanceTo` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
+-   `amountDesired` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to desired
 
 #### Examples
 
 ```javascript
-const balance_from = 77814.0638 // EOS
-const balance_to = 429519.5539120331 // BNT
-const amount_desired = 1
+const balanceFrom = 77814.0638 // EOS
+const balanceTo = 429519.5539120331 // BNT
+const amountDesired = 1
 
-bancorx.bancorInverseFormula(balance_from, balance_to, amount_desired)
+bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
 //=> 0.18116577989712823
 ```
 
@@ -155,8 +155,8 @@ Parse Memo
 #### Parameters
 
 -   `converters` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Converter>** relay converters
--   `min_return` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum return
--   `dest_account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** destination acccount
+-   `minReturn` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum return
+-   `destAccount` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** destination acccount
 -   `version` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** bancor protocol version (optional, default `1`)
 
 #### Examples
