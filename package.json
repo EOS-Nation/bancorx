@@ -22,7 +22,7 @@
         "prepublishOnly": "tsc",
         "test": "jest --coverage",
         "posttest": "tslint -p .",
-        "docs": "tsc && documentation readme index.js -s API --github"
+        "docs": "tsc && documentation readme index.js -s API"
     },
     "dependencies": {},
     "devDependencies": {

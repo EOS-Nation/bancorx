@@ -86,8 +86,6 @@ const balance = await rpc.get_currency_balance(code, account, symbol);
 
 ### bancorFormula
 
-[index.js:26-28](https://git@github.com/:EOS-Nation/bancorx/blob/98ecb8565010a6229e810819fad018dff5dbbeb8/index.js#L26-L28 "Source code on GitHub")
-
 Bancor Formula
 
 token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
@@ -117,8 +115,6 @@ bancorx.bancorFormula(balance_from, balance_to, amount)
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed amount
 
 ### bancorInverseFormula
-
-[index.js:53-55](https://git@github.com/:EOS-Nation/bancorx/blob/98ecb8565010a6229e810819fad018dff5dbbeb8/index.js#L53-L55 "Source code on GitHub")
 
 Bancor Inverse Formula
 
@@ -150,8 +146,6 @@ Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### parseMemo
 
-[index.js:78-85](https://git@github.com/:EOS-Nation/bancorx/blob/98ecb8565010a6229e810819fad018dff5dbbeb8/index.js#L78-L85 "Source code on GitHub")
-
 Parse Memo
 
 #### Parameters
@@ -180,8 +174,6 @@ Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### parseBalance
 
-[index.js:97-103](https://git@github.com/:EOS-Nation/bancorx/blob/98ecb8565010a6229e810819fad018dff5dbbeb8/index.js#L97-L103 "Source code on GitHub")
-
 Parse Balance
 
 #### Parameters
@@ -198,8 +190,6 @@ bancorx.parseBalance(10.0) //=> {quantity: 10.0}
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** parsed balance
 
 ### relays
-
-[index.js:117-220](https://git@github.com/:EOS-Nation/bancorx/blob/98ecb8565010a6229e810819fad018dff5dbbeb8/index.js#L117-L220 "Source code on GitHub")
 
 Relays
 
