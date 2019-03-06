@@ -70,7 +70,7 @@ export function bancorInverseFormula(
  * @param {Converter[]} converters relay converters
  * @param {number} min_return minimum return
  * @param {string} dest_account destination acccount
- * @param {number} [version] bancor protocol version
+ * @param {number} [version=1] bancor protocol version
  * @returns {string} computed memo
  * @example
  *

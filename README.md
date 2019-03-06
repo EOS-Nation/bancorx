@@ -157,7 +157,7 @@ Parse Memo
 -   `converters` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Converter>** relay converters
 -   `min_return` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** minimum return
 -   `dest_account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** destination acccount
--   `version` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** bancor protocol version
+-   `version` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** bancor protocol version (optional, default `1`)
 
 #### Examples
 
