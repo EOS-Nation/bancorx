@@ -232,7 +232,7 @@ export const relays: Relays = {
         code: "realgoldtael",
         account: "bancorc11145",
         symbol: "TAEL",
-        precision: 4,
+        precision: 6,
     },
     ZOS: {
         code: "zosdiscounts",
@@ -244,13 +244,13 @@ export const relays: Relays = {
         code: "equacasheos1",
         account: "bancorc11152",
         symbol: "EQUA",
-        precision: 4,
+        precision: 8,
     },
     PEOS: {
         code: "thepeostoken",
         account: "bancorc11153",
         symbol: "PEOS",
-        precision: 4
+        precision: 4,
     },
     DAPP: {
         code: "dappservices",
@@ -262,32 +262,31 @@ export const relays: Relays = {
         code: "chexchexchex",
         account: "bancorc11155",
         symbol: "CHEX",
-        precision: 4,
+        precision: 8,
     },
-    
     NUT: {
        code: "eosdtnutoken",
        account: "bancorc11215",
        symbol: "NUT",
-       precision: 4,
+       precision: 9,
     },
     EOSDT: {
        code: "eosdtsttoken",
        account: "bancorc11222",
        symbol: "EOSDT",
-       precision: 4,
+       precision: 9,
     },
     STUFF: {
        code: "stuff.eos",
        account: "bnr123553535",
        symbol: "STUFF",
-       precision: 4
+       precision: 4,
     },
     FINX: {
        code: "finxtokenvci",
        account: "bnr215453322",
        symbol: "FINX",
-       precision: 4
+       precision: 8,
     },
 };
 
@@ -301,7 +300,7 @@ export interface Relay {
 export interface Relays {
     EOS: Relay;
     BNT: Relay;
-    
+
     BLACK: Relay;
     KARMA: Relay;
     PGL: Relay;
@@ -312,7 +311,7 @@ export interface Relays {
     EPRA: Relay;
     DICE: Relay;
     HVT: Relay;
-    
+
     OCT: Relay;
     MEV: Relay;
     ZKS: Relay;
@@ -323,12 +322,12 @@ export interface Relays {
     PEOS: Relay;
     DAPP: Relay;
     CHEX: Relay;
-    
+
     NUT: Relay;
     EOSDT: Relay;
     STUFF: Relay;
     FINX: Relay;
-    
+
     [relay: string]: Relay;
 }
 
