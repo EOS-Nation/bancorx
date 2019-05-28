@@ -139,70 +139,10 @@ export const relays: Relays = {
         symbol: "BNT",
         precision: 10,
     },
-    ZOS: {
-        code: "zosdiscounts",
-        account: "bancorc11151",
-        symbol: "ZOS",
-        precision: 4,
-    },
-    IQ: {
-        code: "everipediaiq",
-        account: "bancorc11123",
-        symbol: "IQ",
-        precision: 3,
-    },
-    PGL: {
-        code: "prospectorsg",
-        account: "bancorc11113",
-        symbol: "PGL",
-        precision: 4,
-    },
-    CUSD: {
-        code: "stablecarbon",
-        account: "bancorc11144",
-        symbol: "CUSD",
-        precision: 2,
-    },
-    DICE: {
-        code: "betdicetoken",
-        account: "bancorc11125",
-        symbol: "DICE",
-        precision: 2,
-    },
     BLACK: {
         code: "eosblackteam",
         account: "bancorc11111",
         symbol: "BLACK",
-        precision: 4,
-    },
-    CET: {
-        code: "eosiochaince",
-        account: "bancorc11114",
-        symbol: "CET",
-        precision: 4,
-    },
-    EPRA: {
-        code: "epraofficial",
-        account: "bancorc11124",
-        symbol: "EPRA",
-        precision: 4,
-    },
-    MEETONE: {
-        code: "eosiomeetone",
-        account: "bancorc11122",
-        symbol: "MEETONE",
-        precision: 4,
-    },
-    ZKS: {
-        code: "zkstokensr4u",
-        account: "bancorc11142",
-        symbol: "ZKS",
-        precision: 0,
-    },
-    OCT: {
-        code: "octtothemoon",
-        account: "bancorc11132",
-        symbol: "OCT",
         precision: 4,
     },
     KARMA: {
@@ -211,23 +151,143 @@ export const relays: Relays = {
         symbol: "KARMA",
         precision: 4,
     },
-    HVT: {
-        code: "hirevibeshvt",
-        account: "bancorc11131",
-        symbol: "HVT",
+    PGL: {
+        code: "prospectorsg",
+        account: "bancorc11113",
+        symbol: "PGL",
         precision: 4,
     },
+    CET: {
+        code: "eosiochaince",
+        account: "bancorc11114",
+        symbol: "CET",
+        precision: 4,
+    },
+    // bancorc11115 DEOS (removed)
     HORUS: {
         code: "horustokenio",
         account: "bancorc11121",
         symbol: "HORUS",
         precision: 4,
     },
+    MEETONE: {
+        code: "eosiomeetone",
+        account: "bancorc11122",
+        symbol: "MEETONE",
+        precision: 4,
+    },
+    IQ: {
+        code: "everipediaiq",
+        account: "bancorc11123",
+        symbol: "IQ",
+        precision: 3,
+    },
+    EPRA: {
+        code: "epraofficial",
+        account: "bancorc11124",
+        symbol: "EPRA",
+        precision: 4,
+    },
+    DICE: {
+        code: "betdicetoken",
+        account: "bancorc11125",
+        symbol: "DICE",
+        precision: 2,
+    },
+    HVT: {
+        code: "hirevibeshvt",
+        account: "bancorc11131",
+        symbol: "HVT",
+        precision: 4,
+    },
+    OCT: {
+        code: "octtothemoon",
+        account: "bancorc11132",
+        symbol: "OCT",
+        precision: 4,
+    },
+    // bancorc11133 POKER (removed)
     MEV: {
         code: "eosvegascoin",
         account: "bancorc11134",
         symbol: "MEV",
         precision: 4,
+    },
+    // bancorc11135 PEG (removed)
+    // bancorc11141 ? (does not exist)
+    ZKS: {
+        code: "zkstokensr4u",
+        account: "bancorc11142",
+        symbol: "ZKS",
+        precision: 0,
+    },
+    // bancorc11143 EPT (removed)
+    CUSD: {
+        code: "stablecarbon",
+        account: "bancorc11144",
+        symbol: "CUSD",
+        precision: 2,
+    },
+    TAEL: {
+        code: "realgoldtael",
+        account: "bancorc11145",
+        symbol: "TAEL",
+        precision: 4,
+    },
+    ZOS: {
+        code: "zosdiscounts",
+        account: "bancorc11151",
+        symbol: "ZOS",
+        precision: 4,
+    },
+    EQUA: {
+        code: "equacasheos1",
+        account: "bancorc11152",
+        symbol: "EQUA",
+        precision: 4,
+    },
+    PEOS: {
+        code: "thepeostoken",
+        account: "bancorc11153",
+        symbol: "PEOS",
+        precision: 4
+    },
+    DAPP: {
+        code: "dappservices",
+        account: "bancorc11154",
+        symbol: "DAPP",
+        precision: 4,
+    },
+    CHEX: {
+        code: "chexchexchex",
+        account: "bancorc11155",
+        symbol: "CHEX",
+        precision: 4,
+    },
+    
+    NUT: {
+       code: "eosdtnutoken",
+       account: "bancorc11215",
+       symbol: "NUT",
+       precision: 4,
+    },
+    EOSDT: {
+       code: "eosdtsttoken",
+       account: "bancorc11222",
+       symbol: "EOSDT",
+       precision: 4,
+    },
+    STUFF: {
+       code: "stuff.eos",
+       account: "bnr123553535",
+       symbol: "STUFF",
+       precision: 4
+    },
+    FINX: {
+       code: "finxtokenvci",
+       account: "bnr215453322",
+       symbol: "FINX",
+       precision: 4
     },
 };
 
@@ -241,21 +301,34 @@ export interface Relay {
 export interface Relays {
     EOS: Relay;
     BNT: Relay;
-    ZOS: Relay;
-    IQ: Relay;
-    PGL: Relay;
-    CUSD: Relay;
-    DICE: Relay;
+    
     BLACK: Relay;
-    CET: Relay;
-    EPRA: Relay;
-    MEETONE: Relay;
-    ZKS: Relay;
-    OCT: Relay;
     KARMA: Relay;
-    HVT: Relay;
+    PGL: Relay;
+    CET: Relay;
     HORUS: Relay;
+    MEETONE: Relay;
+    IQ: Relay;
+    EPRA: Relay;
+    DICE: Relay;
+    HVT: Relay;
+    
+    OCT: Relay;
     MEV: Relay;
+    ZKS: Relay;
+    CUSD: Relay;
+    TAEL: Relay;
+    ZOS: Relay;
+    EQUA: Relay;
+    PEOS: Relay;
+    DAPP: Relay;
+    CHEX: Relay;
+    
+    NUT: Relay;
+    EOSDT: Relay;
+    STUFF: Relay;
+    FINX: Relay;
+    
     [relay: string]: Relay;
 }
 
