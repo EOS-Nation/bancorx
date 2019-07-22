@@ -288,6 +288,24 @@ export const relays: Relays = {
        symbol: "FINX",
        precision: 8,
     },
+    EMT: {
+        code: "emanateoneos",
+        account: "bancorc11213",
+        symbol: "EMT",
+        precision: 4,
+    },
+    DRAGON: {
+        code: "eosdragontkn",
+        account: "bancorc11223",
+        symbol: "DRAGON",
+        precision: 4,
+    },
+    PIXEOS: {
+        code: "pixeos1token",
+        account: "bancorc11214",
+        symbol: "PIXEOS",
+        precision: 4,
+    },
 };
 
 export interface Relay {
@@ -327,6 +345,10 @@ export interface Relays {
     EOSDT: Relay;
     STUFF: Relay;
     FINX: Relay;
+
+    EMT: Relay;
+    DRAGON: Relay;
+    PIXEOS: Relay;
 
     [relay: string]: Relay;
 }
