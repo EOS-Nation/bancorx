@@ -192,7 +192,7 @@ export const relays: Relays = {
         code: "betdicetoken",
         account: "bancorc11125",
         symbol: "DICE",
-        precision: 2,
+        precision: 4,
     },
     HVT: {
         code: "hirevibeshvt",
