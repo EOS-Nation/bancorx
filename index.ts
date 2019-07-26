@@ -355,6 +355,7 @@ export interface Relays {
     EMT: Relay;
     DRAGON: Relay;
     PIXEOS: Relay;
+    LUME: Relay;
 
     [relay: string]: Relay;
 }
