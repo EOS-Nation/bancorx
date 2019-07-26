@@ -306,6 +306,12 @@ export const relays: Relays = {
         symbol: "PIXEOS",
         precision: 4,
     },
+    LUME: {
+        code: "lumetokenctr",
+        account: "bancorc11225",
+        symbol: "LUME",
+        precision: 3,
+    }
 };
 
 export interface Relay {
