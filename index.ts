@@ -1,67 +1,44 @@
 /**
- * Bancor Formula
+ * Parse Memo
  *
- * - token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
- * - token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
- *
- * ```js
- * Formula:
- * 1.0000 / (77814.0638 + 1.0000) * 429519.5539120331
- * // => 5.519748143058556
- * ```
- *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amount amount to convert
- * @returns {number} computed amount
+ * @param {Converter[]} converters relay converters
+ * @param {number} minReturn minimum return
+ * @param {string} destAccount destination acccount
+ * @param {number} [version=1] bancor protocol version
+ * @returns {string} computed memo
  * @example
  *
- * const balanceFrom = 77814.0638 // EOS
- * const balanceTo = 429519.5539120331 // BNT
- * const amount = 1
+ * const CUSD = bancorx.relays.CUSD;
+ * const BNT = bancorx.relays.BNT;
  *
- * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
- * // => 5.519748143058556
+ * // Single converter (BNT => CUSD)
+ * bancorx.parseMemo([CUSD], "3.17", "<account>")
+ * // => "1,bancorc11144 CUSD,3.17,<account>"
+ *
+ * // Multi converter (EOS => BNT => CUSD)
+ * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
+ * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
-export function bancorFormula(
-    balanceFrom: number,
-    balanceTo: number,
-    amount: number,
+export function bancorX(
+  from: string,
+  to: string,
+  amountFrom: number,
+  destAccount: string,
+  version= 1,
 ) {
-    return amount / (balanceFrom + amount) * balanceTo;
-}
+    // get relays
+    const relayFrom = relays[from];
+    const relayTo = relays[to];
+    const relayBnt = relays.BNT;
 
-/**
- * Bancor Inverse Formula
- *
- * - token balance of EOS (eosio.token) in the relay: 77814.0638 EOS
- * - token balance of BNT (bntbntbntbnt) in the relay: 429519.5539120331 BNT
- *
- * ```js
- * Inverse Formula:
- * 77814.0638 / (1.0 - 1 / 429519.5539120331) - 77814.0638
- * // => 0.18116577989712823
- * ```
- *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amountDesired amount to desired
- * @returns {number} computed desired amount
- * @example
- *
- * const balanceFrom = 77814.0638 // EOS
- * const balanceTo = 429519.5539120331 // BNT
- * const amountDesired = 1
- *
- * bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
- * // => 0.18116577989712823
- */
-export function bancorInverseFormula(
-    balanceFrom: number,
-    balanceTo: number,
-    amountDesired: number,
-) {
-    return balanceFrom / (1.0 - amountDesired / balanceTo) - balanceFrom;
+    // Get Relay Balance FROM on BNT
+    const balanceFrom = parseFloat(
+      await vxm.eosTransit.accessContext.eosRpc.get_currency_balance(
+        relayFrom.code,
+        relayFrom.account,
+        relayFrom.symbol
+      )
+    )
 }
 
 /**
@@ -86,8 +63,9 @@ export function bancorInverseFormula(
  * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
 export function parseMemo(
-    converters: Converter[],
-    minReturn: string,
+    from: string,
+    to: string,
+    minReturn: number,
     destAccount: string,
     version= 1,
 ) {
@@ -96,22 +74,6 @@ export function parseMemo(
     }).join(" ");
 
     return `${version},${receiver},${minReturn},${destAccount}`;
-}
-
-/**
- * Parse Balance
- *
- * @param {string|number} balance token balance
- * @returns {Object} parsed balance
- * @example
- *
- * bancorx.parseBalance("10.0000 EOS") // => {quantity: 10.0, symbol: "EOS"}
- * bancorx.parseBalance(10.0) // => {quantity: 10.0}
- */
-export function parseBalance(balance: string | number) {
-    if (typeof balance === "number") { return {quantity: balance}; }
-    const [quantity, symbol] = balance.split(" ");
-    return {quantity: Number(quantity), symbol};
 }
 
 /**
@@ -163,7 +125,6 @@ export const relays: Relays = {
         symbol: "CET",
         precision: 4,
     },
-    // bancorc11115 DEOS (removed)
     HORUS: {
         code: "horustokenio",
         account: "bancorc11121",
@@ -206,22 +167,18 @@ export const relays: Relays = {
         symbol: "OCT",
         precision: 4,
     },
-    // bancorc11133 POKER (removed)
     MEV: {
         code: "eosvegascoin",
         account: "bancorc11134",
         symbol: "MEV",
         precision: 4,
     },
-    // bancorc11135 PEG (removed)
-    // bancorc11141 ? (does not exist)
     ZKS: {
         code: "zkstokensr4u",
         account: "bancorc11142",
         symbol: "ZKS",
         precision: 0,
     },
-    // bancorc11143 EPT (removed)
     CUSD: {
         code: "stablecarbon",
         account: "bancorc11144",
@@ -311,7 +268,7 @@ export const relays: Relays = {
         account: "bancorc11225",
         symbol: "LUME",
         precision: 3,
-    }
+    },
 };
 
 export interface Relay {
@@ -358,9 +315,4 @@ export interface Relays {
     LUME: Relay;
 
     [relay: string]: Relay;
-}
-
-export interface Converter {
-    account: string;
-    symbol: string;
 }
