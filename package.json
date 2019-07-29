@@ -24,9 +24,7 @@
         "posttest": "tslint -p .",
         "docs": "tsc && documentation readme index.js -s API"
     },
-    "dependencies": {
-        "eosjs": "^20.0.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@types/jest": "*",
         "documentation": "*",
