@@ -1,79 +1,84 @@
+import { Api, JsonRpc, RpcError } from "eosjs";
+const eosRpc = new JsonRpc("nodes.get-scatter.com", {});
+
 /**
- * Parse Memo
+ * Bancor X
  *
- * @param {Converter[]} converters relay converters
- * @param {number} minReturn minimum return
+ * @param {string} from token to convert FROM
+ * @param {string} to token to convert TO
+ * @param {number} amountFrom amount to convert FROM
  * @param {string} destAccount destination acccount
  * @param {number} [version=1] bancor protocol version
- * @returns {string} computed memo
+ * @returns {object} min return amount and parsed memo
  * @example
  *
- * const CUSD = bancorx.relays.CUSD;
- * const BNT = bancorx.relays.BNT;
- *
- * // Single converter (BNT => CUSD)
- * bancorx.parseMemo([CUSD], "3.17", "<account>")
- * // => "1,bancorc11144 CUSD,3.17,<account>"
- *
- * // Multi converter (EOS => BNT => CUSD)
- * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
+ * // Convert EOS => CUSD
+ * bancorx.bancorx("EOS", "CUSD" "3.1717", "<account>")
  * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
-export function bancorX(
+export async function bancorX(
   from: string,
   to: string,
   amountFrom: number,
   destAccount: string,
   version= 1,
 ) {
-    // get relays
+    //
+    // GET RELAY BALANCES
+    //
+
+    // Get Relays
     const relayFrom = relays[from];
     const relayTo = relays[to];
     const relayBnt = relays.BNT;
 
-    // Get Relay Balance FROM on BNT
+    // Get Relay Balance FROM
     const balanceFrom = parseFloat(
-      await vxm.eosTransit.accessContext.eosRpc.get_currency_balance(
+      await eosRpc.get_currency_balance(
         relayFrom.code,
         relayFrom.account,
-        relayFrom.symbol
-      )
-    )
-}
+        relayFrom.symbol,
+      ),
+    );
 
-/**
- * Parse Memo
- *
- * @param {Converter[]} converters relay converters
- * @param {number} minReturn minimum return
- * @param {string} destAccount destination acccount
- * @param {number} [version=1] bancor protocol version
- * @returns {string} computed memo
- * @example
- *
- * const CUSD = bancorx.relays.CUSD;
- * const BNT = bancorx.relays.BNT;
- *
- * // Single converter (BNT => CUSD)
- * bancorx.parseMemo([CUSD], "3.17", "<account>")
- * // => "1,bancorc11144 CUSD,3.17,<account>"
- *
- * // Multi converter (EOS => BNT => CUSD)
- * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
- * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
- */
-export function parseMemo(
-    from: string,
-    to: string,
-    minReturn: number,
-    destAccount: string,
-    version= 1,
-) {
-    const receiver = converters.map(({account, symbol}) => {
-        return `${account} ${symbol}`;
-    }).join(" ");
+    // Get Relay Balance BNT FROM
+    const balanceBnt = parseFloat(
+      await eosRpc.get_currency_balance(
+        relayBnt.code,
+        relayFrom.account,
+        relayBnt.symbol,
+      ),
+    );
 
-    return `${version},${receiver},${minReturn},${destAccount}`;
+    // Get Relay Balance BNT TO
+    const balanceBntFrom = parseFloat(
+      await eosRpc.get_currency_balance(
+        relayBnt.code,
+        relayTo.account,
+        relayBnt.symbol,
+      ),
+    );
+
+    // Get Relay Balance TO
+    const balanceTo = parseFloat(
+      await eosRpc.get_currency_balance(
+        relayTo.code,
+        relayTo.account,
+        relayTo.symbol,
+      ),
+    );
+
+    //
+    // CALCULATE MIN RETURN AMOUNT
+    //
+
+    // get BTN Amount
+    const amountBntFrom =
+      (amountFrom / (balanceFrom + amountFrom)) * balanceBnt;
+
+    // get TO Amount
+    const amountTo =
+      (amountBntFrom / (balanceBntFrom + amountBntFrom)) * balanceTo;
 }
 
 /**
