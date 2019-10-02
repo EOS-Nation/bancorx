@@ -311,7 +311,13 @@ export const relays: Relays = {
         account: "bancorc11225",
         symbol: "LUME",
         precision: 3,
-    }
+    },
+    SENSE: {
+        code: "sensegenesis",
+        account: "bnr512553153",
+        symbol: "SENSE",
+        precision: 4,
+    },
 };
 
 export interface Relay {
@@ -356,6 +362,7 @@ export interface Relays {
     DRAGON: Relay;
     PIXEOS: Relay;
     LUME: Relay;
+    SENSE: Relay;
 
     [relay: string]: Relay;
 }
