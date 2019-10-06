@@ -318,6 +318,12 @@ export const relays: Relays = {
         symbol: "SENSE",
         precision: 4,
     },
+    USDT: {
+        code: "tethertether",
+        account: "bancorc11232",
+        symbol: "USDT",
+        precision: 4,
+    },
 };
 
 export interface Relay {
@@ -363,6 +369,7 @@ export interface Relays {
     PIXEOS: Relay;
     LUME: Relay;
     SENSE: Relay;
+    USDT: Relay;
 
     [relay: string]: Relay;
 }
