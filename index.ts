@@ -314,7 +314,7 @@ export const relays: Relays = {
     },
     SENSE: {
         code: "sensegenesis",
-        account: "bnr512553153",
+        account: "bancorc11231",
         symbol: "SENSE",
         precision: 4,
     },
