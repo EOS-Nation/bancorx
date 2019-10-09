@@ -53,6 +53,8 @@ import * as bancorx from "bancorx";
 | HVT        | hirevibeshvt | bancorc11131 | 4             |
 | HORUS      | horustokenio | bancorc11121 | 4             |
 | MEV        | eosvegascoin | bancorc11134 | 4             |
+| SENSE      | sensegenesis | bnr512553153 | 4             |
+| USDT       | tethertether | bancorc11232 | 4             |
 
 ## Get Relay Balances
 
