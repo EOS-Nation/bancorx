@@ -13,5 +13,5 @@
         /* Module Resolution Options */
         "esModuleInterop": true
     },
-    "files": ["index.ts"]
+    "include": ["src"]
 }

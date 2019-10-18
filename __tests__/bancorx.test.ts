@@ -1,4 +1,4 @@
-import * as bancorx from "..";
+import * as bancorx from "../src";
 
 test("bancorx.bancorFormula - EOS/BNT", () => {
     const balanceFrom = 77814.0638; // EOS
