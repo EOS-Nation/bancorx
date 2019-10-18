@@ -1,7 +1,8 @@
 import * as bancorx from "../src";
+import { split } from 'eos-common'
 
-const balanceFrom = 77814.0638; // EOS
-const balanceTo = 429519.5539120331; // BNT
-const amount = 1;
+const balanceFrom = split(`77814.0638 EOS`);
+const balanceTo = split(`429519.5539120331 BNT`);
+const amount = split(`1.0000 EOS`);
 bancorx.bancorFormula(balanceFrom, balanceTo, amount);
-// => 5.519748143058556
+// => Asset type of 5.519748143058556 BNT 
