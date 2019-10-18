@@ -1,6 +1,7 @@
 import { Converter } from "./interfaces";
-import { Asset, Symbol } from 'eos-common'
+import { Asset, Symbol } from "eos-common";
 export { relays } from "./relays";
+import Decimal from "decimal.js";
 
 /**
  * Bancor Formula
@@ -32,9 +33,16 @@ export function bancorFormula(
   balanceTo: Asset,
   amount: Asset
 ) {
-  if (!balanceFrom.symbol.isEqual(amount.symbol)) throw new Error("From symbol does not match amount symbol");
-
-  return (amount.amount / (balanceFrom.amount + amount.amount)) * balanceTo.amount;
+  if (!balanceFrom.symbol.isEqual(amount.symbol))
+    throw new Error("From symbol does not match amount symbol");
+  const balanceFromNumber = new Decimal(balanceFrom.amount);
+  const balanceToNumber = new Decimal(balanceTo.amount);
+  const amountNumber = new Decimal(amount.amount);
+  const reward = amountNumber
+    .div(balanceFromNumber.plus(amountNumber))
+    .times(balanceToNumber)
+    .toNumber();
+  return new Asset(reward, balanceTo.symbol);
 }
 
 /**
@@ -67,9 +75,12 @@ export function bancorInverseFormula(
   balanceTo: Asset,
   amountDesired: Asset
 ) {
-  if (!balanceFrom.symbol.isEqual(amountDesired.symbol)) throw new Error("From symbol does not match amount symbol");
-
-  return balanceFrom.amount / (1.0 - amountDesired.amount / balanceTo.amount) - balanceFrom.amount;
+  if (!balanceTo.symbol.isEqual(amountDesired.symbol))
+    throw new Error("From symbol does not match amount symbol");
+  const reward =
+    balanceFrom.amount / (1.0 - amountDesired.amount / balanceTo.amount) -
+    balanceFrom.amount;
+  return new Asset(reward, amountDesired.symbol);
 }
 
 /**
