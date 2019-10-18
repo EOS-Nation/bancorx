@@ -65,7 +65,7 @@ export function bancorInverseFormula(
 }
 
 /**
- * Parse Memo
+ * Compose Memo
  *
  * @param {Converter[]} converters relay converters
  * @param {number} minReturn minimum return
@@ -78,18 +78,18 @@ export function bancorInverseFormula(
  * const BNT = bancorx.relays.BNT;
  *
  * // Single converter (BNT => CUSD)
- * bancorx.parseMemo([CUSD], "3.17", "<account>")
+ * bancorx.composeMemo([CUSD], "3.17", "<account>")
  * // => "1,bancorc11144 CUSD,3.17,<account>"
  *
  * // Multi converter (EOS => BNT => CUSD)
- * bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
+ * bancorx.composeMemo([BNT, CUSD], "3.17", "<account>")
  * // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
  */
-export function parseMemo(
+export function composeMemo(
     converters: Converter[],
     minReturn: string,
     destAccount: string,
-    version= 1,
+    version = 1,
 ) {
     const receiver = converters.map(({account, symbol}) => {
         return `${account} ${symbol}`;
