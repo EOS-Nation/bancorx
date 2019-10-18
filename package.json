@@ -22,7 +22,9 @@
         "posttest": "tslint -p .",
         "docs": "tsc && documentation readme index.js -s API"
     },
-    "dependencies": {},
+    "dependencies": {
+        "eos-common": "^0.1.2"
+    },
     "devDependencies": {
         "@types/jest": "*",
         "documentation": "*",
