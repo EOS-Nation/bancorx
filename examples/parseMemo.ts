@@ -1,4 +1,4 @@
-import * as bancorx from "../";
+import * as bancorx from "../src";
 
 const {CUSD, BNT} = bancorx.relays;
 const minReturn = "3.17";
