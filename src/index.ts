@@ -1,4 +1,5 @@
 import { Converter } from "./interfaces";
+import { Asset, Symbol } from 'eos-common'
 export { relays } from "./relays";
 
 /**
@@ -13,9 +14,9 @@ export { relays } from "./relays";
  * // => 5.519748143058556
  * ```
  *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amount amount to convert
+ * @param {Asset} balanceFrom from token balance in the relay
+ * @param {Asset} balanceTo to token balance in the relay
+ * @param {Asset} amount amount to convert
  * @returns {number} computed amount
  * @example
  *
@@ -27,11 +28,13 @@ export { relays } from "./relays";
  * // => 5.519748143058556
  */
 export function bancorFormula(
-  balanceFrom: number,
-  balanceTo: number,
-  amount: number
+  balanceFrom: Asset,
+  balanceTo: Asset,
+  amount: Asset
 ) {
-  return (amount / (balanceFrom + amount)) * balanceTo;
+  if (!balanceFrom.symbol.isEqual(amount.symbol)) throw new Error("From symbol does not match amount symbol");
+
+  return (amount.amount / (balanceFrom.amount + amount.amount)) * balanceTo.amount;
 }
 
 /**
@@ -46,9 +49,9 @@ export function bancorFormula(
  * // => 0.18116577989712823
  * ```
  *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amountDesired amount to desired
+ * @param {Asset} balanceFrom from token balance in the relay
+ * @param {Asset} balanceTo to token balance in the relay
+ * @param {Asset} amountDesired amount to desired
  * @returns {number} computed desired amount
  * @example
  *
@@ -60,11 +63,13 @@ export function bancorFormula(
  * // => 0.18116577989712823
  */
 export function bancorInverseFormula(
-  balanceFrom: number,
-  balanceTo: number,
-  amountDesired: number
+  balanceFrom: Asset,
+  balanceTo: Asset,
+  amountDesired: Asset
 ) {
-  return balanceFrom / (1.0 - amountDesired / balanceTo) - balanceFrom;
+  if (!balanceFrom.symbol.isEqual(amountDesired.symbol)) throw new Error("From symbol does not match amount symbol");
+
+  return balanceFrom.amount / (1.0 - amountDesired.amount / balanceTo.amount) - balanceFrom.amount;
 }
 
 /**
