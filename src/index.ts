@@ -35,15 +35,15 @@ export function bancorFormula(
 ) {
   if (!balanceFrom.symbol.isEqual(amount.symbol))
     throw new Error("From symbol does not match amount symbol");
-  const balanceFromNumber = new Decimal(balanceFrom.toNumber())
-  const balanceToNumber = new Decimal(balanceTo.toNumber())
-  const amountNumber = new Decimal(amount.toNumber())
-  const reward = 
-    amountNumber
-      .div(balanceFromNumber.plus(amountNumber))
-      .times(balanceToNumber)
-      .toNumber()
-
+  const balanceFromNumber = new Decimal(balanceFrom.toNumber());
+  const balanceToNumber = new Decimal(balanceTo.toNumber());
+  const amountNumber = new Decimal(amount.toNumber());
+  const reward = amountNumber
+    .div(balanceFromNumber.plus(amountNumber))
+    .times(balanceToNumber)
+    .times(Math.pow(10, balanceTo.symbol.precision))
+    .toDecimalPlaces(0, 1)
+    .toNumber();
 
   return new Asset(reward, balanceTo.symbol);
 }

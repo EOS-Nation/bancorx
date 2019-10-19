@@ -18,26 +18,16 @@ const rawTrades = [
 
 
 
-const trades = rawTrades.map(([amount, bluBalance, redBalance, reward]) => ({
-    amount: split(`${amount.toFixed(2)} BLU`),
-    bluBalance: split(`${bluBalance.toFixed(2)} BLU`),
-    redBalance: split(`${redBalance.toFixed(2)} RED`),
-    reward: split(`${reward.toFixed(2)} RED`)
-}))
-
 test("bancorx.bancorFormula - EOS/BNT", () => {
-  const balanceFrom = split(`77814.0638 EOS`); // EOS
-  const balanceTo = split(`429519.5539120331 BNT`); // BNT
-  const amount = split(`1.0000 EOS`);
+  const balanceFrom = split(`2.8138 EOS`); // EOS
+  const balanceTo = split(`0.24864909 BTC`); // BNT
+  const amount = split(`0.0010 EOS`);
+
+
   expect(bancorx.bancorFormula(balanceFrom, balanceTo, amount).toNumber()).toBe(
-    5.519748143058556
+    0.00008833
   );
 
-  trades.forEach(({ amount, bluBalance, redBalance, reward }) => {
-    expect(
-      bancorx.bancorFormula(bluBalance, redBalance, amount).toString()
-    ).toEqual(reward.toString());
-  });
 });
 
 test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
