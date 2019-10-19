@@ -21,12 +21,12 @@ import Decimal from "decimal.js";
  * @returns {number} computed amount
  * @example
  *
- * const balanceFrom = 77814.0638 // EOS
- * const balanceTo = 429519.5539120331 // BNT
- * const amount = 1
+ * const balanceFrom = split(`77814.0638 EOS`);
+ * const balanceTo = split(`429519.5539120331 BNT`); // BNT
+ * const amount = split(`1.0000 EOS`);
  *
  * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
- * // => 5.519748143058556
+ * // => split(`5.519748143058556 BNT`)
  */
 export function bancorFormula(
   balanceFrom: Asset,
@@ -43,7 +43,6 @@ export function bancorFormula(
     .div(balanceFromNumber.plus(amountNumber))
     .times(balanceToNumber)
     .toFixed(balanceTo.symbol.precision, Decimal.ROUND_DOWN);
-
 
   const formatted = new Decimal(
     Number(reward) * Math.pow(10, balanceTo.symbol.precision)
