@@ -22,7 +22,6 @@ const trades = [
 ];
 
 test("bancorx.bancorFormula - EOS/BNT", () => {
-
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
