@@ -124,21 +124,3 @@ export function composeMemo(
 
   return `${version},${receiver},${minReturn},${destAccount}`;
 }
-
-/**
- * Parse Balance
- *
- * @param {string|number} balance token balance
- * @returns {Object} parsed balance
- * @example
- *
- * bancorx.parseBalance("10.0000 EOS") // => {quantity: 10.0, symbol: "EOS"}
- * bancorx.parseBalance(10.0) // => {quantity: 10.0}
- */
-export function parseBalance(balance: string | number) {
-  if (typeof balance === "number") {
-    return { quantity: balance };
-  }
-  const [quantity, symbol] = balance.split(" ");
-  return { quantity: Number(quantity), symbol };
-}

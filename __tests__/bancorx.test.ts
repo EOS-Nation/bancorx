@@ -71,11 +71,3 @@ test("bancorx.composeMemo", () => {
     bancorx.composeMemo([BNT, CUSD], minReturn, destAccount, version)
   ).toBe("1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>");
 });
-
-test("bancorx.parseBalance", () => {
-  expect(bancorx.parseBalance("10.0000 EOS")).toEqual({
-    quantity: 10.0,
-    symbol: "EOS"
-  });
-  expect(bancorx.parseBalance(10.0)).toEqual({ quantity: 10.0 });
-});
