@@ -1,33 +1,40 @@
 import * as bancorx from "../src";
 import { split } from "eos-common";
 
-const rawTrades = [
-  [1.0, 100, 100, 0.99],
-  [2.0, 101, 99, 1.92],
-  [4.0, 103, 97, 3.63],
-  // [16.0, 115, 87, 10.62],
-  // [32.0, 131, 76, 14.99],
-  // [64.0, 163, 61, 17.3],
-  // [128.0, 227, 44, 15.88],
-  // [256.0, 355, 28, 11.8],
-  // [512.0, 611, 16, 7.46],
-  // [1024.0, 1123, 9, 4.25],
-  // [2048.0, 2147, 5, 2.27],
-  // [4096.0, 4195, 2, 1.18]
+const trades = [
+  [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
+  [`2.0000 BLU`, `101.0000 BLU`, `99.0100 RED`, `1.9225 RED`],
+  [`4.0000 BLU`, `103.0000 BLU`, `97.0875 RED`, `3.6294 RED`],
+  [`8.0000 BLU`, `107.0000 BLU`, `93.4581 RED`, `6.5014 RED`],
+  [`16.0000 BLU`, `115.0000 BLU`, `86.9567 RED`, `10.6206 RED`],
+  [`32.0000 BLU`, `131.0000 BLU`, `76.3361 RED`, `14.9862 RED`],
+  [`64.0000 BLU`, `163.0000 BLU`, `61.3499 RED`, `17.2968 RED`],
+  [`128.0000 BLU`, `227.0000 BLU`, `44.0531 RED`, `15.8839 RED`],
+  [`256.0000 BLU`, `355.0000 BLU`, `28.1692 RED`, `11.8024 RED`],
+  [`512.0000 BLU`, `611.0000 BLU`, `16.3668 RED`, `7.4619 RED`],
+  [`1024.0000 BLU`, `1123.0000 BLU`, `8.9049 RED`, `4.2471 RED`],
+  [`2048.0000 BLU`, `2147.0000 BLU`, `4.6578 RED`, `2.2738 RED`],
+  [`4096.0000 BLU`, `4195.0000 BLU`, `2.3840 RED`, `1.1777 RED`],
+  [`2.6719 BLU`, `8291.0000 BLU`, `1.2063 RED`, `0.0002 RED`],
+  [`2.6901 RED`, `1.2061 RED`, `8293.6719 BLU`, `5726.2991 BLU`],
+  [`3.0000 RED`, `3.8962 RED`, `2567.3728 BLU`, `1116.8641 BLU`],
+  [`0.0010 EOS`, `2.8138 EOS`, `0.24864909 BTC`, `0.00008833 BTC`]
 ];
 
-
-
 test("bancorx.bancorFormula - EOS/BNT", () => {
-  const balanceFrom = split(`2.8138 EOS`); // EOS
-  const balanceTo = split(`0.24864909 BTC`); // BNT
-  const amount = split(`0.0010 EOS`);
 
-
-  expect(bancorx.bancorFormula(balanceFrom, balanceTo, amount).toNumber()).toBe(
-    0.00008833
-  );
-
+  trades
+    .map(([amount, bluBalance, redBalance, reward]) => [
+      split(amount),
+      split(bluBalance),
+      split(redBalance),
+      split(reward)
+    ])
+    .forEach(([amount, blueBalance, redBalance, reward]) => {
+      expect(bancorx.bancorFormula(blueBalance, redBalance, amount)).toEqual(
+        reward
+      );
+    });
 });
 
 test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
