@@ -35,17 +35,21 @@ export function bancorFormula(
 ) {
   if (!balanceFrom.symbol.isEqual(amount.symbol))
     throw new Error("From symbol does not match amount symbol");
-  const balanceFromNumber = new Decimal(balanceFrom.toNumber());
-  const balanceToNumber = new Decimal(balanceTo.toNumber());
-  const amountNumber = new Decimal(amount.toNumber());
+  const balanceFromNumber = balanceFrom.toDecimal();
+  const balanceToNumber = balanceTo.toDecimal();
+  const amountNumber = amount.toDecimal();
+
   const reward = amountNumber
     .div(balanceFromNumber.plus(amountNumber))
     .times(balanceToNumber)
-    .times(Math.pow(10, balanceTo.symbol.precision))
-    .toDecimalPlaces(0, 1)
-    .toNumber();
+    .toFixed(balanceTo.symbol.precision, Decimal.ROUND_DOWN);
 
-  return new Asset(reward, balanceTo.symbol);
+
+  const formatted = new Decimal(
+    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
+  ).toFixed(0, Decimal.ROUND_DOWN);
+
+  return new Asset(Number(formatted), balanceTo.symbol);
 }
 
 /**
