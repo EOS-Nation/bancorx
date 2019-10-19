@@ -1,6 +1,6 @@
 import { Converter } from "./interfaces";
 import { Asset, Symbol } from "eos-common";
-export { relays } from "./relays";
+export { relays } from "./Relays";
 import Decimal from "decimal.js";
 
 /**
