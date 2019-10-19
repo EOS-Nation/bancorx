@@ -1,6 +1,6 @@
 {
     "name": "bancorx",
-    "version": "0.2.6",
+    "version": "0.2.65",
     "description": "BancorX Utility",
     "main": "build/index.js",
     "types": "index.d.ts",
@@ -23,7 +23,7 @@
         "docs": "tsc && documentation readme index.js -s API"
     },
     "dependencies": {
-        "eos-common": "^0.1.3"
+        "eos-common": "^0.1.31"
     },
     "devDependencies": {
         "@types/jest": "*",
