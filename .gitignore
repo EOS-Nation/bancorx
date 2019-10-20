@@ -3,6 +3,7 @@
 *.js.map
 *.d.ts
 !jest.config.js
+.DS_Store
 
 # Logs
 logs

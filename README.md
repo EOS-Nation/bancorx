@@ -78,7 +78,7 @@ const balance = await rpc.get_currency_balance(code, account, symbol);
 -   [bancorInverseFormula](#bancorinverseformula)
     -   [Parameters](#parameters-1)
     -   [Examples](#examples-1)
--   [parseMemo](#parsememo)
+-   [composeMemo](#composememo)
     -   [Parameters](#parameters-2)
     -   [Examples](#examples-2)
 -   [parseBalance](#parsebalance)
@@ -151,7 +151,7 @@ bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed desired amount
 
-### parseMemo
+### composeMemo
 
 Parse Memo
 
@@ -169,11 +169,11 @@ const CUSD = bancorx.relays.CUSD;
 const BNT = bancorx.relays.BNT;
 
 // Single converter (BNT => CUSD)
-bancorx.parseMemo([CUSD], "3.17", "<account>")
+bancorx.composeMemo([CUSD], "3.17", "<account>")
 // => "1,bancorc11144 CUSD,3.17,<account>"
 
 // Multi converter (EOS => BNT => CUSD)
-bancorx.parseMemo([BNT, CUSD], "3.17", "<account>")
+bancorx.composeMemo([BNT, CUSD], "3.17", "<account>")
 // => "1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>"
 ```
 

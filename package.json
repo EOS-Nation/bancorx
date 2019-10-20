@@ -2,12 +2,10 @@
     "name": "bancorx",
     "version": "0.2.6",
     "description": "BancorX Utility",
-    "main": "index.js",
+    "main": "build/index.js",
     "types": "index.d.ts",
     "files": [
-        "index.js",
-        "index.d.ts",
-        "index.js.map"
+        "build"
     ],
     "keywords": [
         "bancor",
@@ -32,6 +30,8 @@
         "ts-jest": "*",
         "ts-node": "*",
         "tslint": "*",
+        "tslint-config-prettier": "^1.18.0",
+        "tslint-plugin-prettier": "^2.0.1",
         "typescript": "*"
     }
 }

@@ -1,4 +1,4 @@
-import * as bancorx from "../";
+import * as bancorx from "../src";
 
 const balanceFrom = 77814.0638; // EOS
 const balanceTo = 429519.5539120331; // BNT

@@ -1,4 +1,4 @@
-import * as bancorx from "..";
+import * as bancorx from "../src";
 
 test("bancorx.bancorFormula - EOS/BNT", () => {
     const balanceFrom = 77814.0638; // EOS
@@ -14,21 +14,21 @@ test("bancorx.bancorInverseFormula - EOS/BNT", () => {
     expect(bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)).toBe(0.18116577989712823);
 });
 
-test("bancorx.parseMemo", () => {
+test("bancorx.composeMemo", () => {
     const {CUSD, BNT} = bancorx.relays;
     const minReturn = "3.17";
     const destAccount = "<account>";
     const version = 1;
 
     // Single converter (BNT => CUSD)
-    expect(bancorx.parseMemo([CUSD], minReturn, destAccount))
+    expect(bancorx.composeMemo([CUSD], minReturn, destAccount))
         .toBe("1,bancorc11144 CUSD,3.17,<account>");
 
-    expect(bancorx.parseMemo([CUSD], minReturn, destAccount, version))
+    expect(bancorx.composeMemo([CUSD], minReturn, destAccount, version))
         .toBe("1,bancorc11144 CUSD,3.17,<account>");
 
     // Multi converter (EOS => BNT => CUSD)
-    expect(bancorx.parseMemo([BNT, CUSD], minReturn, destAccount, version))
+    expect(bancorx.composeMemo([BNT, CUSD], minReturn, destAccount, version))
         .toBe("1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>");
 
 });
