@@ -36,19 +36,19 @@ test("bancorx.bancorFormula - EOS/BNT", () => {
     });
 });
 
-test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
-  const balanceFrom = split(`77814.0638 EOS`);
-  const balanceTo = split(`429519.5539120331 BNT`);
-  const amountDesired = split(`1.0000000000 BNT`);
-  expect(balanceFrom.symbol.precision).toBe(4);
-  expect(balanceTo.symbol.precision).toBe(10);
-  expect(amountDesired.symbol.precision).toBe(10);
-
-  expect(
-    bancorx
-      .bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
-      .toNumber()
-  ).toBe(0.1811657798);
+test("bancorx.bancorInverseFormula - EOS/BNT", () => {
+  trades
+    .map(([amount, bluBalance, redBalance, reward]) => [
+      split(amount),
+      split(bluBalance),
+      split(redBalance),
+      split(reward)
+    ])
+    .forEach(([amount, blueBalance, redBalance, reward]) => {
+      expect(
+        bancorx.bancorInverseFormula(blueBalance, redBalance, reward)
+      ).toEqual(amount);
+    });
 });
 
 test("bancorx.composeMemo", () => {

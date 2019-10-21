@@ -83,10 +83,21 @@ export function bancorInverseFormula(
 ) {
   if (!balanceTo.symbol.isEqual(amountDesired.symbol))
     throw new Error("From symbol does not match amount symbol");
-  const reward =
-    balanceFrom.amount / (1.0 - amountDesired.amount / balanceTo.amount) -
-    balanceFrom.amount;
-  return new Asset(reward, amountDesired.symbol);
+  const balanceFromNumber = balanceFrom.toDecimal()
+  const balanceToNumber = balanceTo.toDecimal()
+  const amountNumber = amountDesired.toDecimal()
+  const oneNumber = new Decimal(1);
+
+  const reward = balanceFromNumber
+    .div(oneNumber.minus(amountNumber.div(balanceToNumber)))
+    .minus(balanceFromNumber)
+    .toFixed(0, Decimal.ROUND_UP);
+
+  const formatted = new Decimal(
+    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
+  ).toFixed(0, Decimal.ROUND_DOWN);
+
+  return new Asset(Number(formatted), balanceFrom.symbol);
 }
 
 /**
