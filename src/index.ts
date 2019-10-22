@@ -1,6 +1,7 @@
 import { Converter } from "./interfaces";
 import { Asset } from "eos-common";
 export { relays } from "./Relays";
+export { BancorCalculator, Relay, Token } from "./BancorCalculator";
 import Decimal from "decimal.js";
 
 /**
@@ -83,9 +84,9 @@ export function bancorInverseFormula(
 ) {
   if (!balanceTo.symbol.isEqual(amountDesired.symbol))
     throw new Error("From symbol does not match amount symbol");
-  const balanceFromNumber = balanceFrom.toDecimal()
-  const balanceToNumber = balanceTo.toDecimal()
-  const amountNumber = amountDesired.toDecimal()
+  const balanceFromNumber = balanceFrom.toDecimal();
+  const balanceToNumber = balanceTo.toDecimal();
+  const amountNumber = amountDesired.toDecimal();
   const oneNumber = new Decimal(1);
 
   const reward = balanceFromNumber

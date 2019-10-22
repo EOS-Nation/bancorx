@@ -1,5 +1,5 @@
 import * as bancorx from "../src";
-import { split } from "eos-common";
+import { split, Symbol, Asset } from "eos-common";
 
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
@@ -36,7 +36,7 @@ test("bancorx.bancorFormula - EOS/BNT", () => {
     });
 });
 
-test("bancorx.bancorInverseFormula - EOS/BNT", () => {
+test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -70,4 +70,53 @@ test("bancorx.composeMemo", () => {
   expect(
     bancorx.composeMemo([BNT, CUSD], minReturn, destAccount, version)
   ).toBe("1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>");
+});
+
+const EOS: Symbol = new Symbol("EOS", 4);
+const BNT: Symbol = new Symbol("BNT", 4);
+const BTC: Symbol = new Symbol("BTC", 4);
+
+const relays: bancorx.Relay[] = [
+  {
+    reserves: [
+      {
+        contract: "eosio.token",
+        symbol: EOS
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTEOS", 4)
+    },
+    contract: "rockup.xyz"
+  },
+  {
+    reserves: [
+      {
+        contract: "thisisbitcoin",
+        symbol: BTC
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTBTC", 4)
+    },
+    contract: "zomglol"
+  }
+];
+
+test("path works", async () => {
+  const eosAmount = split(`1.0000 EOS`);
+  const bntAmount = split(`1.0000 BNT`);
+
+  const calculator = new bancorx.BancorCalculator([], relays);
+  expect(await calculator.calculateReturn(eosAmount, BTC)).toEqual(relays);
 });
