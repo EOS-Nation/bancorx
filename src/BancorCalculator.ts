@@ -37,7 +37,7 @@ export class BancorCalculator {
       );
 
       const toMatch = fromMatches.find(relay =>
-        relay.reserves.some(token => token.symbol == to)
+        relay.reserves.some(token => token.symbol.isEqual(to))
       );
       console.log({ fromMatches, toMatch });
       return [fromMatches[0], toMatch];
