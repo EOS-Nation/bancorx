@@ -1,5 +1,7 @@
 import { Converter } from "./interfaces";
-export { relays } from "./relays";
+import { Asset } from "eos-common";
+export { relays } from "./Relays";
+import Decimal from "decimal.js";
 
 /**
  * Bancor Formula
@@ -13,25 +15,40 @@ export { relays } from "./relays";
  * // => 5.519748143058556
  * ```
  *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amount amount to convert
+ * @param {Asset} balanceFrom from token balance in the relay
+ * @param {Asset} balanceTo to token balance in the relay
+ * @param {Asset} amount amount to convert
  * @returns {number} computed amount
  * @example
  *
- * const balanceFrom = 77814.0638 // EOS
- * const balanceTo = 429519.5539120331 // BNT
- * const amount = 1
+ * const balanceFrom = split(`77814.0638 EOS`);
+ * const balanceTo = split(`429519.5539120331 BNT`); // BNT
+ * const amount = split(`1.0000 EOS`);
  *
  * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
- * // => 5.519748143058556
+ * // => split(`5.519748143058556 BNT`)
  */
 export function bancorFormula(
-  balanceFrom: number,
-  balanceTo: number,
-  amount: number
+  balanceFrom: Asset,
+  balanceTo: Asset,
+  amount: Asset
 ) {
-  return (amount / (balanceFrom + amount)) * balanceTo;
+  if (!balanceFrom.symbol.isEqual(amount.symbol))
+    throw new Error("From symbol does not match amount symbol");
+  const balanceFromNumber = balanceFrom.toDecimal();
+  const balanceToNumber = balanceTo.toDecimal();
+  const amountNumber = amount.toDecimal();
+
+  const reward = amountNumber
+    .div(balanceFromNumber.plus(amountNumber))
+    .times(balanceToNumber)
+    .toFixed(balanceTo.symbol.precision, Decimal.ROUND_DOWN);
+
+  const formatted = new Decimal(
+    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
+  ).toFixed(0, Decimal.ROUND_DOWN);
+
+  return new Asset(Number(formatted), balanceTo.symbol);
 }
 
 /**
@@ -46,9 +63,9 @@ export function bancorFormula(
  * // => 0.18116577989712823
  * ```
  *
- * @param {number} balanceFrom from token balance in the relay
- * @param {number} balanceTo to token balance in the relay
- * @param {number} amountDesired amount to desired
+ * @param {Asset} balanceFrom from token balance in the relay
+ * @param {Asset} balanceTo to token balance in the relay
+ * @param {Asset} amountDesired amount to desired
  * @returns {number} computed desired amount
  * @example
  *
@@ -60,11 +77,27 @@ export function bancorFormula(
  * // => 0.18116577989712823
  */
 export function bancorInverseFormula(
-  balanceFrom: number,
-  balanceTo: number,
-  amountDesired: number
+  balanceFrom: Asset,
+  balanceTo: Asset,
+  amountDesired: Asset
 ) {
-  return balanceFrom / (1.0 - amountDesired / balanceTo) - balanceFrom;
+  if (!balanceTo.symbol.isEqual(amountDesired.symbol))
+    throw new Error("From symbol does not match amount symbol");
+  const balanceFromNumber = balanceFrom.toDecimal()
+  const balanceToNumber = balanceTo.toDecimal()
+  const amountNumber = amountDesired.toDecimal()
+  const oneNumber = new Decimal(1);
+
+  const reward = balanceFromNumber
+    .div(oneNumber.minus(amountNumber.div(balanceToNumber)))
+    .minus(balanceFromNumber)
+    .toFixed(0, Decimal.ROUND_UP);
+
+  const formatted = new Decimal(
+    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
+  ).toFixed(0, Decimal.ROUND_DOWN);
+
+  return new Asset(Number(formatted), balanceFrom.symbol);
 }
 
 /**
@@ -101,22 +134,4 @@ export function composeMemo(
     .join(" ");
 
   return `${version},${receiver},${minReturn},${destAccount}`;
-}
-
-/**
- * Parse Balance
- *
- * @param {string|number} balance token balance
- * @returns {Object} parsed balance
- * @example
- *
- * bancorx.parseBalance("10.0000 EOS") // => {quantity: 10.0, symbol: "EOS"}
- * bancorx.parseBalance(10.0) // => {quantity: 10.0}
- */
-export function parseBalance(balance: string | number) {
-  if (typeof balance === "number") {
-    return { quantity: balance };
-  }
-  const [quantity, symbol] = balance.split(" ");
-  return { quantity: Number(quantity), symbol };
 }

@@ -11,7 +11,8 @@
         "strictNullChecks": true,
 
         /* Module Resolution Options */
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "outDir": "build"
     },
     "include": ["src"]
 }

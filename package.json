@@ -1,13 +1,11 @@
 {
     "name": "bancorx",
-    "version": "0.2.6",
+    "version": "0.2.66",
     "description": "BancorX Utility",
-    "main": "index.js",
+    "main": "build/index.js",
     "types": "index.d.ts",
     "files": [
-        "index.js",
-        "index.d.ts",
-        "index.js.map"
+        "build"
     ],
     "keywords": [
         "bancor",
@@ -24,11 +22,14 @@
         "posttest": "tslint -p .",
         "docs": "tsc && documentation readme index.js -s API"
     },
-    "dependencies": {},
+    "dependencies": {
+        "eos-common": "^0.1.35"
+    },
     "devDependencies": {
         "@types/jest": "*",
         "documentation": "*",
         "jest": "*",
+        "prettier": "^1.18.2",
         "ts-jest": "*",
         "ts-node": "*",
         "tslint": "*",
