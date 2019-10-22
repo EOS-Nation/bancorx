@@ -74,49 +74,69 @@ test("bancorx.composeMemo", () => {
 
 const EOS: Symbol = new Symbol("EOS", 4);
 const BNT: Symbol = new Symbol("BNT", 4);
+const EOSDT: Symbol = new Symbol("EOSDT", 4);
 const BTC: Symbol = new Symbol("BTC", 4);
 
-const relays: bancorx.Relay[] = [
-  {
-    reserves: [
-      {
-        contract: "eosio.token",
-        symbol: EOS
-      },
-      {
-        contract: "bntbntbntbnt",
-        symbol: BNT
-      }
-    ],
-    smartToken: {
-      contract: "labelaarbaro",
-      symbol: new Symbol("BNTEOS", 4)
+const EosDtandBtc = {
+  reserves: [
+    {
+      contract: "sdasd",
+      symbol: EOSDT
     },
-    contract: "rockup.xyz"
+    {
+      contract: "labelaarbaro",
+      symbol: BTC
+    }
+  ],
+  smartToken: {
+    contract: "labelaarbaro",
+    symbol: new Symbol("BNTBTC", 4)
   },
-  {
-    reserves: [
-      {
-        contract: "thisisbitcoin",
-        symbol: BTC
-      },
-      {
-        contract: "bntbntbntbnt",
-        symbol: BNT
-      }
-    ],
-    smartToken: {
-      contract: "labelaarbaro",
-      symbol: new Symbol("BNTBTC", 4)
+  contract: "rockup.xyz"
+};
+
+const BNTandEos = {
+  reserves: [
+    {
+      contract: "eosio.token",
+      symbol: EOS
     },
-    contract: "zomglol"
-  }
-];
+    {
+      contract: "bntbntbntbnt",
+      symbol: BNT
+    }
+  ],
+  smartToken: {
+    contract: "labelaarbaro",
+    symbol: new Symbol("BNTEOS", 4)
+  },
+  contract: "rockup.xyz"
+};
+
+const eosDtAndBnt = {
+  reserves: [
+    {
+      contract: "eosdt",
+      symbol: EOSDT
+    },
+    {
+      contract: "bntbntbnt",
+      symbol: BNT
+    }
+  ],
+  smartToken: {
+    contract: "labelaarbaro",
+    symbol: new Symbol("BNTDT", 4)
+  },
+  contract: "zomglol"
+};
+
+const relays: bancorx.Relay[] = [eosDtAndBnt, BNTandEos, EosDtandBtc];
 
 test("path works", async () => {
   const eosAmount = split(`1.0000 EOS`);
   const bntAmount = split(`1.0000 BNT`);
 
   const calculator = new bancorx.BancorCalculator([], relays);
-  expect(await calculator.calculateReturn(eosAmount, BTC)).toEqual(relays);
+  expect(await calculator.calculateReturn(eosAmount, BTC)).toEqual([BNTandEos, eosDtAndBnt, EosDtandBtc]);
 });

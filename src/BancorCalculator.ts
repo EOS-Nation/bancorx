@@ -22,13 +22,16 @@ export class BancorCalculator {
     this.relays = relays;
   }
 
+  private isDirectRelationship(relays: Relay[], desired: Symbol) {
+    return relays.find(relay => relay.reserves.some(token => token.symbol.isEqual(desired)));
+  }
+
   private findPath(from: Symbol, to: Symbol) {
     const direct = this.relays.find(relay =>
       relay.reserves.some(token => token.symbol == from && token.symbol == to)
     );
 
     if (direct) {
-      console.log("direct thang");
       return [direct];
     } else {
       // Find all the relays which do match
