@@ -47,6 +47,10 @@ export class BancorCalculator {
     );
   }
 
+  private oppositeToken(relay: Relay, notDesired: Symbol): Token | undefined {
+    return relay.reserves.find(token => !token.symbol.isEqual(notDesired));
+  }
+
   private findPath(
     lastFrom: Symbol,
     to: Symbol,
@@ -67,9 +71,7 @@ export class BancorCalculator {
       return;
     }
     relaysScope.forEach(relay => {
-      const token = relay.reserves.find(
-        token => !token.symbol.isEqual(lastFrom)
-      )!!;
+      const token: Token = this.oppositeToken(relay, lastFrom)!!;
       this.findPath(token.symbol, to, relaysScope, [...relaysPath, relay]);
     });
   }
