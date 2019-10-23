@@ -31,7 +31,6 @@ export class BancorCalculator {
     );
   }
 
-  
   private restrictScope(relays: Relay[], banned: Relay[], require: Symbol) {
     const withoutUsedRelays = relays.filter(relay => {
       return banned.some(
@@ -48,14 +47,19 @@ export class BancorCalculator {
     );
   }
 
-  private findPath(lastFrom: Symbol, to: Symbol, relaysPath: Relay[] = []) {
+  private findPath(
+    lastFrom: Symbol,
+    to: Symbol,
+    relays: Relay[],
+    relaysPath: Relay[] = []
+  ) {
     // Scope to search relays
     // Start off with all relays which contain originating symbol
     // Else dismiss it of any relays already used and all relays related to lastFrom
     const relaysScope =
       relaysPath.length == 0
-        ? this.relaysContainingSymbol(this.relays, lastFrom)
-        : this.restrictScope(this.relays, relaysPath, lastFrom);
+        ? this.relaysContainingSymbol(relays, lastFrom)
+        : this.restrictScope(relays, relaysPath, lastFrom);
 
     const direct = this.findDesired(relaysScope, to);
     if (direct) {
@@ -66,13 +70,17 @@ export class BancorCalculator {
       const token = relay.reserves.find(
         token => !token.symbol.isEqual(lastFrom)
       )!!;
-      this.findPath(token.symbol, to, [...relaysPath, relay]);
+      this.findPath(token.symbol, to, relaysScope, [...relaysPath, relay]);
     });
   }
 
-  public async calculateReturn(amount: Asset, desired: Symbol, callback: any) {
+  public async calculateReturn(
+    amount: Asset,
+    desired: Symbol,
+    callback: (data: Relay[]) => void
+  ) {
     this.callback = callback;
-    return this.findPath(amount.symbol, desired);
+    return this.findPath(amount.symbol, desired, this.relays);
   }
 }
 

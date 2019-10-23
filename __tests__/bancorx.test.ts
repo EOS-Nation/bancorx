@@ -1,6 +1,7 @@
 import * as bancorx from "../src";
 import { split, Symbol, Asset } from "eos-common";
-import _ from 'underscore'
+import _ from "underscore";
+import wait from "waait";
 
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
@@ -21,17 +22,6 @@ const trades = [
   [`3.0000 RED`, `3.8962 RED`, `2567.3728 BLU`, `1116.8641 BLU`],
   [`0.0010 EOS`, `2.8138 EOS`, `0.24864909 BTC`, `0.00008833 BTC`]
 ];
-
-
-test.only('tes', () => {
-
-
-  const array1 = [1,2,3,4,5]
-  const array2 = [9,6,2,77,5]
-  const common = _.intersection(array1, array2)
-
-  expect(common).toEqual([2,5])
-})
 
 test("bancorx.bancorFormula - EOS/BNT", () => {
   trades
@@ -88,8 +78,9 @@ const EOS: Symbol = new Symbol("EOS", 4);
 const BNT: Symbol = new Symbol("BNT", 4);
 const EOSDT: Symbol = new Symbol("EOSDT", 4);
 const BTC: Symbol = new Symbol("BTC", 4);
+const CAT: Symbol = new Symbol("CAT", 4);
 
-const EosDtandBtc = {
+const EOSDTandBTC = {
   reserves: [
     {
       contract: "sdasd",
@@ -107,7 +98,7 @@ const EosDtandBtc = {
   contract: "rockup.xyz"
 };
 
-const BNTandEos = {
+const EOSandBNT = {
   reserves: [
     {
       contract: "eosio.token",
@@ -125,7 +116,7 @@ const BNTandEos = {
   contract: "rockup.xyz"
 };
 
-const eosDtAndBnt = {
+const BNTandEOSDT = {
   reserves: [
     {
       contract: "eosdt",
@@ -143,19 +134,49 @@ const eosDtAndBnt = {
   contract: "zomglol"
 };
 
-const relays: bancorx.Relay[] = [eosDtAndBnt, BNTandEos, EosDtandBtc];
+const CATandEOSDT = {
+  reserves: [
+    {
+      contract: "eosdt",
+      symbol: EOSDT
+    },
+    {
+      contract: "catcat",
+      symbol: CAT
+    }
+  ],
+  smartToken: {
+    contract: "labelaarbaro",
+    symbol: new Symbol("BNTCAT", 4)
+  },
+  contract: "fwefwef"
+};
+
+const relays: bancorx.Relay[] = [
+  BNTandEOSDT,
+  EOSandBNT,
+  EOSDTandBTC,
+  CATandEOSDT
+];
 
 test.only("path works", async () => {
-  const eosAmount = split(`1.0000 EOS`);
   const bntAmount = split(`1.0000 BNT`);
 
   const calculator = new bancorx.BancorCalculator([], relays);
-  // @ts-ignore
-  await calculator.calculateReturn(eosAmount, BNT, (data) => {
-    expect(data).toEqual([BNTandEos])
-  })
-  // @ts-ignore
-  await calculator.calculateReturn(eosAmount, BTC, (data) => {
-    expect(data).toEqual([BNTandEos, eosDtAndBnt, EosDtandBtc]);
-  })
+
+  await calculator.calculateReturn(split(`1.0000 EOS`), BTC, data => {
+    expect(data).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
+  });
+
+  await calculator.calculateReturn(split(`1.0000 EOS`), BNT, data => {
+    expect(data).toEqual([EOSandBNT]);
+  });
+
+  await calculator.calculateReturn(split(`1.0000 BTC`), EOS, data => {
+    expect(data).toEqual([EOSDTandBTC, BNTandEOSDT, EOSandBNT]);
+  });
+
+  await calculator.calculateReturn(split(`1.0000 EOS`), CAT, data => {
+    expect(data).toEqual([EOSandBNT, BNTandEOSDT, CATandEOSDT]);
+  });
 });
