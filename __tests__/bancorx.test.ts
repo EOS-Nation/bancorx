@@ -150,7 +150,10 @@ test.only("path works", async () => {
   const bntAmount = split(`1.0000 BNT`);
 
   const calculator = new bancorx.BancorCalculator([], relays);
-  // expect(await calculator.calculateReturn(eosAmount, BNT)).toEqual([BNTandEos])
+  // @ts-ignore
+  await calculator.calculateReturn(eosAmount, BNT, (data) => {
+    expect(data).toEqual([BNTandEos])
+  })
   // @ts-ignore
   await calculator.calculateReturn(eosAmount, BTC, (data) => {
     expect(data).toEqual([BNTandEos, eosDtAndBnt, EosDtandBtc]);
