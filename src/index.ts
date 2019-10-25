@@ -1,8 +1,21 @@
 import { Converter } from "./interfaces";
-import { Asset } from "eos-common";
+import { Asset, Symbol } from "eos-common";
 export { relays } from "./Relays";
-export { BancorCalculator, Relay, Token } from "./BancorCalculator";
+// export { BancorCalculator, Relay, Token } from "./BancorCalculator";
 import Decimal from "decimal.js";
+
+export type EosAccount = string;
+
+export interface Token {
+  contract: EosAccount;
+  symbol: Symbol;
+}
+
+export interface nRelay {
+  reserves: Token[];
+  smartToken: Token;
+  contract: EosAccount;
+}
 
 /**
  * Bancor Formula
@@ -127,7 +140,7 @@ export function composeMemo(
   minReturn: string,
   destAccount: string,
   version = 1
-) {
+): string {
   const receiver = converters
     .map(({ account, symbol }) => {
       return `${account} ${symbol}`;
@@ -135,4 +148,90 @@ export function composeMemo(
     .join(" ");
 
   return `${version},${receiver},${minReturn},${destAccount}`;
+}
+
+export function relaysToConverters(
+  from: Symbol,
+  relays: nRelay[]
+): Converter[] {
+  return relays
+    .map(relay =>
+      relay.reserves.map(token => ({
+        account: relay.contract,
+        symbol: token.symbol.code()
+      }))
+    )
+    .reduce((prev, curr) => prev.concat(curr))
+    .filter(converter => converter.symbol !== from.code())
+    .reduce((accum, item) => {
+      return accum.find(
+        (converter: Converter) => converter.symbol == item.symbol
+      )
+        ? accum
+        : [...accum, item];
+    }, []);
+}
+
+export function removeRelay(
+  relays: nRelay[],
+  departingRelay: nRelay
+): nRelay[] {
+  return relays.filter(relay => {
+    const [token1, token2] = relay.reserves;
+    const [dToken1, dToken2] = departingRelay.reserves;
+    return !(
+      (token1.symbol.isEqual(dToken1.symbol) ||
+        token1.symbol.isEqual(dToken2.symbol)) &&
+      (token2.symbol.isEqual(dToken1.symbol) ||
+        token2.symbol.isEqual(dToken2.symbol))
+    );
+  });
+}
+
+export function getOppositeSymbol(relay: nRelay, symbol: Symbol): Symbol {
+  const oppositeToken = relay.reserves.find(
+    token => !token.symbol.isEqual(symbol)
+  )!!;
+  return oppositeToken.symbol;
+}
+
+export function relayHasBothSymbols(symbol1: Symbol, symbol2: Symbol) {
+  return function(relay: nRelay) {
+    return relay.reserves.every(
+      token => token.symbol.isEqual(symbol1) || token.symbol.isEqual(symbol2)
+    );
+  };
+}
+
+export function createPath(
+  from: Symbol,
+  to: Symbol,
+  relays: nRelay[],
+  path: nRelay[] = [],
+  attempt: Symbol = from
+) {
+  const finalRelay = relays.find(relayHasBothSymbols(to, attempt));
+
+  if (finalRelay) return [...path, finalRelay];
+
+  const searchScope =
+    path.length == 0 ? relays : removeRelay(relays, path[path.length - 1]);
+  const firstRelayContainingAttempt = searchScope.find(relay =>
+    relay.reserves.some(token => token.symbol.isEqual(attempt))
+  );
+
+  if (!firstRelayContainingAttempt)
+    return createPath(from, to, searchScope, []);
+
+  const oppositeSymbol = getOppositeSymbol(
+    firstRelayContainingAttempt,
+    attempt
+  );
+  return createPath(
+    from,
+    to,
+    relays,
+    [...path, firstRelayContainingAttempt],
+    oppositeSymbol
+  );
 }

@@ -2,6 +2,7 @@ import * as bancorx from "../src";
 import { split, Symbol, Asset } from "eos-common";
 import _ from "underscore";
 import wait from "waait";
+import { nRelay } from "../src/index";
 
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
@@ -80,7 +81,7 @@ const EOSDT: Symbol = new Symbol("EOSDT", 4);
 const BTC: Symbol = new Symbol("BTC", 4);
 const CAT: Symbol = new Symbol("CAT", 4);
 
-const EOSDTandBTC = {
+const EOSDTandBTC: nRelay = {
   reserves: [
     {
       contract: "sdasd",
@@ -98,7 +99,7 @@ const EOSDTandBTC = {
   contract: "rockup.xyz"
 };
 
-const EOSandBNT = {
+const EOSandBNT: nRelay = {
   reserves: [
     {
       contract: "eosio.token",
@@ -116,7 +117,7 @@ const EOSandBNT = {
   contract: "rockup.xyz"
 };
 
-const BNTandEOSDT = {
+const BNTandEOSDT: nRelay = {
   reserves: [
     {
       contract: "eosdt",
@@ -134,7 +135,9 @@ const BNTandEOSDT = {
   contract: "zomglol"
 };
 
-const CATandEOSDT = {
+// there is a new RElay and old relay overlap
+// write test for 'removeRelay' method.
+const CATandEOSDT: nRelay = {
   reserves: [
     {
       contract: "eosdt",
@@ -152,31 +155,134 @@ const CATandEOSDT = {
   contract: "fwefwef"
 };
 
-const relays: bancorx.Relay[] = [
+const relays: bancorx.nRelay[] = [
   BNTandEOSDT,
   EOSandBNT,
   EOSDTandBTC,
   CATandEOSDT
 ];
 
-test.only("path works", async () => {
-  const bntAmount = split(`1.0000 BNT`);
+// test.only("path works", async () => {
+//   const bntAmount = split(`1.0000 BNT`);
 
-  const calculator = new bancorx.BancorCalculator([], relays);
+//   const calculator = new bancorx.BancorCalculator([], relays);
 
-  await calculator.calculateReturn(split(`1.0000 EOS`), BTC, data => {
-    expect(data).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
-  });
+//   await calculator.calculateReturn(split(`1.0000 EOS`), BTC, data => {
+//     expect(data).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
+//   });
 
-  await calculator.calculateReturn(split(`1.0000 EOS`), BNT, data => {
-    expect(data).toEqual([EOSandBNT]);
-  });
+//   await calculator.calculateReturn(split(`1.0000 EOS`), BNT, data => {
+//     expect(data).toEqual([EOSandBNT]);
+//   });
 
-  await calculator.calculateReturn(split(`1.0000 BTC`), EOS, data => {
-    expect(data).toEqual([EOSDTandBTC, BNTandEOSDT, EOSandBNT]);
-  });
+//   await calculator.calculateReturn(split(`1.0000 BTC`), EOS, data => {
+//     expect(data).toEqual([EOSDTandBTC, BNTandEOSDT, EOSandBNT]);
+//   });
 
-  await calculator.calculateReturn(split(`1.0000 EOS`), CAT, data => {
-    expect(data).toEqual([EOSandBNT, BNTandEOSDT, CATandEOSDT]);
-  });
+//   await calculator.calculateReturn(split(`1.0000 EOS`), CAT, data => {
+//     expect(data).toEqual([EOSandBNT, BNTandEOSDT, CATandEOSDT]);
+//   });
+// });
+
+test.only("removeRelay function works", () => {
+  expect(bancorx.removeRelay(relays, CATandEOSDT)).toEqual([
+    BNTandEOSDT,
+    EOSandBNT,
+    EOSDTandBTC
+  ]);
 });
+
+test.only("getOpposite symbol function works", () => {
+  expect(bancorx.getOppositeSymbol(BNTandEOSDT, EOSDT)).toEqual(BNT);
+});
+
+test.only("createPath works", () => {
+  expect(bancorx.createPath(EOS, BTC, relays)).toEqual([
+    EOSandBNT,
+    BNTandEOSDT,
+    EOSDTandBTC
+  ]);
+
+  expect(bancorx.createPath(EOS, CAT, relays)).toEqual([
+    EOSandBNT,
+    BNTandEOSDT,
+    CATandEOSDT
+  ]);
+
+  expect(bancorx.createPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
+
+  //   await calculator.calculateReturn(split(`1.0000 EOS`), CAT, data => {
+  //     expect(data).toEqual([EOSandBNT, BNTandEOSDT, CATandEOSDT]);
+});
+
+test.only("relays to converters", () => {
+  const res = bancorx.createPath(EOS, CAT, relays);
+  console.log(bancorx.relaysToConverters(EOS, res));
+  expect(bancorx.relaysToConverters(EOS, res)).toEqual([
+    { account: "rockup.xyz", symbol: "BNT" },
+    { account: "zomglol", symbol: "EOSDT" },
+    { account: "fwefwef", symbol: "CAT" }
+  ]);
+});
+
+// test.only("ds", () => {
+//   const x = [
+//     ["TUPPY", "EOS"],
+//     ["BNT", "EOS"],
+//     ["BNT", "DERP"],
+//     ["EOSDT", "BNT"],
+//     ["BTC", "EOSDT"],
+//     ["EOSDT", "CAT"],
+//     ["EOS", "DOG"],
+//     ["BTC", "ETH"]
+//   ].reverse();
+
+//   // @ts-ignore
+//   const getOpposite = (relay, symboll) =>
+//     relay.find(symbol => symbol !== symboll);
+
+//   const getRidOfRelay = (relays, badRelay) => {
+//     return relays.filter(
+//       ([token1, token2]) =>
+//         !(badRelay.includes(token1) && badRelay.includes(token2))
+//     );
+//   };
+
+//   // @ts-ignore
+//   const go = (from, to, relays, path = [], attempt = from) => {
+//     // See if the relays
+//     const finalRelay = relays.find(reserve =>
+//       reserve.every(sym => sym == to || sym == attempt)
+//     );
+//     if (finalRelay) return [...path, finalRelay];
+
+//     const searchScope =
+//       path.length == 0 ? relays : getRidOfRelay(relays, path[path.length - 1]);
+//     const firstRelayContainingFrom = searchScope.find(relay =>
+//       relay.includes(attempt)
+//     );
+
+//     if (!firstRelayContainingFrom) return go(from, to, searchScope, []);
+
+//     const oppositeSymbol = getOpposite(firstRelayContainingFrom, attempt);
+//     return go(
+//       from,
+//       to,
+//       relays,
+//       // @ts-ignore
+//       [...path, firstRelayContainingFrom],
+//       oppositeSymbol
+//     );
+//   };
+//   // return go(opposite, to, relays, [...path, fromRelay]);
+//   const res = go("EOS", "BTC", x);
+//   expect(res).toEqual([["BNT", "EOS"], ["EOSDT", "BNT"], ["BTC", "EOSDT"]]);
+//   expect(go("EOS", "ETH", x)).toEqual([
+//     ["BNT", "EOS"],
+//     ["EOSDT", "BNT"],
+//     ["BTC", "EOSDT"],
+//     ["BTC", "ETH"]
+//   ]);
+
+//   expect(go("BNT", "EOS", x)).toEqual([["BNT", "EOS"]]);
+// });
