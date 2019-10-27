@@ -23,8 +23,7 @@
         "docs": "tsc && documentation readme index.js -s API"
     },
     "dependencies": {
-        "eos-common": "^0.1.36",
-        "underscore": "^1.9.1"
+        "eos-common": "^0.1.36"
     },
     "devDependencies": {
         "@types/jest": "*",

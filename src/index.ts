@@ -1,21 +1,8 @@
-import { Converter } from "./interfaces";
+import { Converter, nRelay } from "./interfaces";
 import { Asset, Symbol } from "eos-common";
 export { relays } from "./Relays";
-// export { BancorCalculator, Relay, Token } from "./BancorCalculator";
+export { nRelay } from "./interfaces";
 import Decimal from "decimal.js";
-
-export type EosAccount = string;
-
-export interface Token {
-  contract: EosAccount;
-  symbol: Symbol;
-}
-
-export interface nRelay {
-  reserves: Token[];
-  smartToken: Token;
-  contract: EosAccount;
-}
 
 /**
  * Bancor Formula
@@ -163,7 +150,7 @@ export function relaysToConverters(
     )
     .reduce((prev, curr) => prev.concat(curr))
     .filter(converter => converter.symbol !== from.code())
-    .reduce((accum, item) => {
+    .reduce((accum: Converter[], item: Converter) => {
       return accum.find(
         (converter: Converter) => converter.symbol == item.symbol
       )
@@ -209,7 +196,7 @@ export function createPath(
   relays: nRelay[],
   path: nRelay[] = [],
   attempt: Symbol = from
-) {
+): nRelay[] {
   const finalRelay = relays.find(relayHasBothSymbols(to, attempt));
 
   if (finalRelay) return [...path, finalRelay];
