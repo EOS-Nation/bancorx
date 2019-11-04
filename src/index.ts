@@ -12,13 +12,13 @@ export interface TokenSymbol {
 }
 
 export interface TokenAmount {
-  contract: EosAccount,
+  contract: EosAccount;
   amount: Asset;
 }
 
 export interface HydratedRelay {
-  reserves: TokenAmount[],
-  smartToken: TokenSymbol,
+  reserves: TokenAmount[];
+  smartToken: TokenSymbol;
   contract: EosAccount;
   isMultiContract: boolean;
 }
@@ -231,7 +231,7 @@ export function createPath(
   attempt: Symbol = from
 ) {
   const finalRelay = relays.find(relayHasBothSymbols(to, attempt));
-
+  
   if (finalRelay) return [...path, finalRelay];
 
   const searchScope =
