@@ -1,9 +1,10 @@
 import * as bancorx from "../src";
 import { split, Symbol, Asset } from "eos-common";
 import _ from "underscore";
-import { nRelay } from "../src/index";
+import { nRelay, ChoppedRelay } from "../src/index";
 import { AbstractBancorCalculator } from "../src/AbstractBancorCalculator";
 import wait from "waait";
+import { Converter } from "../src/interfaces";
 
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
@@ -189,7 +190,7 @@ const relays: bancorx.nRelay[] = [
 ];
 
 test("removeRelay function works", () => {
-  expect(bancorx.removeRelay(relays, CATandEOSDT)).toEqual([
+  expect(bancorx.removeChoppedRelay(relays, CATandEOSDT)).toEqual([
     BNTandEOSDT,
     EOSandBNT,
     EOSDTandBTC,
@@ -202,58 +203,646 @@ test.only("getOpposite symbol function works", () => {
 });
 
 test("createPath works", () => {
-  expect(bancorx.createPath(EOS, BTC, relays)).toEqual([
+  expect(bancorx.findPath(EOS, BTC, relays)).toEqual([
     EOSandBNT,
     BNTandEOSDT,
     EOSDTandBTC
   ]);
 
-  expect(bancorx.createPath(EOS, CAT, relays)).toEqual([
+  expect(bancorx.findPath(EOS, CAT, relays)).toEqual([
     EOSandBNT,
     BNTandEOSDT,
     CATandEOSDT
   ]);
 
-  expect(bancorx.createPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
+  expect(bancorx.findPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
 
-  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+  expect(bancorx.findPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
     CATandEOSDT
   ]);
 });
 
+// relayHasBothSymbols
+
+test.only("can chop relays", () => {
+  const choppedRelays = bancorx.chopRelays(relays);
+  expect(choppedRelays).toEqual([
+    {
+      contract: "zomglol",
+      reserves: [
+        {
+          contract: "eosdt",
+          symbol: {
+            _code: "EOSDT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTDT",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "zomglol",
+      reserves: [
+        {
+          contract: "bntbntbnt",
+          symbol: {
+            _code: "BNT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTDT",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.xz",
+      reserves: [
+        {
+          contract: "eosio.token",
+          symbol: {
+            _code: "EOS",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTEOS",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.xz",
+      reserves: [
+        {
+          contract: "bntbntbntbnt",
+          symbol: {
+            _code: "BNT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTEOS",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.xyz",
+      reserves: [
+        {
+          contract: "sdasd",
+          symbol: {
+            _code: "EOSDT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTBTC",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.xyz",
+      reserves: [
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BTC",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTBTC",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "fwefwef",
+      reserves: [
+        {
+          contract: "eosdt",
+          symbol: {
+            _code: "EOSDT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTCAT",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "fwefwef",
+      reserves: [
+        {
+          contract: "catcat",
+          symbol: {
+            _code: "CAT",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BNTCAT",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.zxc",
+      reserves: [
+        {
+          contract: "dwe",
+          symbol: {
+            _code: "BTC",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BTCDOG",
+            precision: 4
+          }
+        }
+      ]
+    },
+    {
+      contract: "rockup.zxc",
+      reserves: [
+        {
+          contract: "fwet",
+          symbol: {
+            _code: "DOG",
+            precision: 4
+          }
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: {
+            _code: "BTCDOG",
+            precision: 4
+          }
+        }
+      ]
+    }
+  ]);
+});
+
+test.only("can chop relay", () => {
+  const EOSandBNT: nRelay = {
+    reserves: [
+      {
+        contract: "eosio.token",
+        symbol: EOS
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTEOS", 4)
+    },
+    contract: "rockup.xz",
+    isMultiContract: false
+  };
+
+  const choppedRelay = bancorx.chopRelay(EOSandBNT);
+
+  expect(choppedRelay).toEqual([
+    {
+      contract: "rockup.xz",
+      reserves: [
+        {
+          contract: "eosio.token",
+          symbol: EOS
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTEOS", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.xz",
+      reserves: [
+        {
+          contract: "bntbntbntbnt",
+          symbol: BNT
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTEOS", 4)
+        }
+      ]
+    }
+  ]);
+});
+
+test.only("remove chopped relay", () => {
+  const EOSandBNT: nRelay = {
+    reserves: [
+      {
+        contract: "eosio.token",
+        symbol: EOS
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTEOS", 4)
+    },
+    contract: "rockup.xz",
+    isMultiContract: false
+  };
+
+  const choppedRelay = bancorx.chopRelay(EOSandBNT);
+
+  expect(
+    bancorx.removeChoppedRelay(
+      [
+        {
+          contract: "zomglol",
+          reserves: [
+            {
+              contract: "eosdt",
+              symbol: new Symbol("EOSDT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTDT", 4)
+            }
+          ]
+        },
+        {
+          contract: "zomglol",
+          reserves: [
+            {
+              contract: "bntbntbnt",
+              symbol: new Symbol("BNT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTDT", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.xz",
+          reserves: [
+            {
+              contract: "eosio.token",
+              symbol: new Symbol("EOS", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTEOS", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.xz",
+          reserves: [
+            {
+              contract: "bntbntbntbnt",
+              symbol: new Symbol("BNT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTEOS", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.xyz",
+          reserves: [
+            {
+              contract: "sdasd",
+              symbol: new Symbol("EOSDT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTBTC", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.xyz",
+          reserves: [
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BTC", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTBTC", 4)
+            }
+          ]
+        },
+        {
+          contract: "fwefwef",
+          reserves: [
+            {
+              contract: "eosdt",
+              symbol: new Symbol("EOSDT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTCAT", 4)
+            }
+          ]
+        },
+        {
+          contract: "fwefwef",
+          reserves: [
+            {
+              contract: "catcat",
+              symbol: new Symbol("CAT", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BNTCAT", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.zxc",
+          reserves: [
+            {
+              contract: "dwe",
+              symbol: new Symbol("BTC", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BTCDOG", 4)
+            }
+          ]
+        },
+        {
+          contract: "rockup.zxc",
+          reserves: [
+            {
+              contract: "fwet",
+              symbol: new Symbol("DOG", 4)
+            },
+            {
+              contract: "labelaarbaro",
+              symbol: new Symbol("BTCDOG", 4)
+            }
+          ]
+        }
+      ],
+      choppedRelay[0]
+    )
+  ).toEqual([
+    {
+      contract: "zomglol",
+      reserves: [
+        {
+          contract: "eosdt",
+          symbol: new Symbol("EOSDT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTDT", 4)
+        }
+      ]
+    },
+    {
+      contract: "zomglol",
+      reserves: [
+        {
+          contract: "bntbntbnt",
+          symbol: new Symbol("BNT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTDT", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.xz",
+      reserves: [
+        {
+          contract: "bntbntbntbnt",
+          symbol: new Symbol("BNT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTEOS", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.xyz",
+      reserves: [
+        {
+          contract: "sdasd",
+          symbol: new Symbol("EOSDT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTBTC", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.xyz",
+      reserves: [
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BTC", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTBTC", 4)
+        }
+      ]
+    },
+    {
+      contract: "fwefwef",
+      reserves: [
+        {
+          contract: "eosdt",
+          symbol: new Symbol("EOSDT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTCAT", 4)
+        }
+      ]
+    },
+    {
+      contract: "fwefwef",
+      reserves: [
+        {
+          contract: "catcat",
+          symbol: new Symbol("CAT", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BNTCAT", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.zxc",
+      reserves: [
+        {
+          contract: "dwe",
+          symbol: new Symbol("BTC", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BTCDOG", 4)
+        }
+      ]
+    },
+    {
+      contract: "rockup.zxc",
+      reserves: [
+        {
+          contract: "fwet",
+          symbol: new Symbol("DOG", 4)
+        },
+        {
+          contract: "labelaarbaro",
+          symbol: new Symbol("BTCDOG", 4)
+        }
+      ]
+    }
+  ]);
+});
+
+test.only("can get oppositeSymbol", () => {
+  const EOSandBNT: nRelay = {
+    reserves: [
+      {
+        contract: "eosio.token",
+        symbol: EOS
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTEOS", 4)
+    },
+    contract: "rockup.xz",
+    isMultiContract: false
+  };
+
+  const choppedRelay = bancorx.chopRelay(EOSandBNT)[0];
+  const res = bancorx.getOppositeSymbol(choppedRelay, EOS);
+  expect(res).toEqual(new Symbol("BNTEOS", 4));
+});
+
+test.only("relay has both symbols", () => {
+  const EOSandBNT: nRelay = {
+    reserves: [
+      {
+        contract: "eosio.token",
+        symbol: EOS
+      },
+      {
+        contract: "bntbntbntbnt",
+        symbol: BNT
+      }
+    ],
+    smartToken: {
+      contract: "labelaarbaro",
+      symbol: new Symbol("BNTEOS", 4)
+    },
+    contract: "rockup.xz",
+    isMultiContract: false
+  };
+
+  const choppedRelay = bancorx.chopRelay(EOSandBNT)[0];
+
+  let func = bancorx.relayHasBothSymbols(EOS, new Symbol("BNTEOS", 4));
+
+  expect(func(choppedRelay)).toBe(true);
+
+  func = bancorx.relayHasBothSymbols(EOS, new Symbol("BNTBNT", 4));
+  expect(func(choppedRelay)).toBe(false);
+});
+
 test.only("createPath works with symbols", async () => {
-  const noice = bancorx.createPath(new Symbol("BNTEOS", 4), BTC, relays);
-  console.log(noice, "was noice", noice.length);
-  expect(noice).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
-});
-
-test("relays to converters", () => {
-  let res = bancorx.createPath(EOS, CAT, relays);
-  console.log(bancorx.relaysToConverters(EOS, res));
-  expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-    { account: "rockup.xz", symbol: "BNT" },
-    { account: "zomglol", symbol: "EOSDT" },
-    { account: "fwefwef", symbol: "CAT" }
+  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+    bancorx.chopRelay(CATandEOSDT)[0]
   ]);
 
-  res = bancorx.createPath(EOS, DOG, relays);
-  expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC, BTCandDOG]);
-
-  expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-    { account: "rockup.xz", symbol: "BNT" },
-    { account: "zomglol", symbol: "EOSDT" },
-    { account: "rockup.xyz", symbol: "BTC" },
-    { account: "rockup.zxc", symbol: "DOG", multiContractSymbol: "BTCDOG" }
-  ]);
+  const res = bancorx.createPath(EOS, BTC, relays);
+  console.log(JSON.stringify(res))
+  expect(res).toEqual(5);
 });
 
-test("compose memo works with multicontracts", () => {
-  const relaysList = bancorx.createPath(EOS, DOG, relays);
-  const converters = bancorx.relaysToConverters(EOS, relaysList);
-  expect(bancorx.composeMemo(converters, "0.0001", "thekellygang", 1)).toBe(
-    `1,rockup.xyz BNT zomglol EOSDT rockup.xyz BTC rockup.zxc:BTCDOG DOG,0.0001,thekellygang`
-  );
-});
+// test("relays to converters", () => {
+//   let res = bancorx.findPath(EOS, CAT, relays);
+//   console.log(bancorx.relaysToConverters(EOS, res));
+//   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
+//     { account: "rockup.xz", symbol: "BNT" },
+//     { account: "zomglol", symbol: "EOSDT" },
+//     { account: "fwefwef", symbol: "CAT" }
+//   ]);
+
+//   res = bancorx.findPath(EOS, DOG, relays);
+//   expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC, BTCandDOG]);
+
+//   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
+//     { account: "rockup.xz", symbol: "BNT" },
+//     { account: "zomglol", symbol: "EOSDT" },
+//     { account: "rockup.xyz", symbol: "BTC" },
+//     { account: "rockup.zxc", symbol: "DOG", multiContractSymbol: "BTCDOG" }
+//   ]);
+// });
+
+// test("compose memo works with multicontracts", () => {
+//   const relaysList = bancorx.findPath(EOS, DOG, relays);
+//   const converters = bancorx.relaysToConverters(EOS, relaysList);
+//   expect(bancorx.composeMemo(converters, "0.0001", "thekellygang", 1)).toBe(
+//     `1,rockup.xyz BNT zomglol EOSDT rockup.xyz BTC rockup.zxc:BTCDOG DOG,0.0001,thekellygang`
+//   );
+// });
 
 const myRelays = [
   {
