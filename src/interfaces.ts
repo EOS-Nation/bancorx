@@ -49,4 +49,5 @@ export interface Relays {
 export interface Converter {
   account: string;
   symbol: string;
+  multiContractSymbol?: string;
 }

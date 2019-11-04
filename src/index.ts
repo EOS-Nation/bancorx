@@ -6,15 +6,28 @@ import Decimal from "decimal.js";
 
 export type EosAccount = string;
 
-export interface Token {
+export interface TokenSymbol {
   contract: EosAccount;
   symbol: Symbol;
 }
 
-export interface nRelay {
-  reserves: Token[];
-  smartToken: Token;
+export interface TokenAmount {
+  contract: EosAccount,
+  amount: Asset;
+}
+
+export interface HydratedRelay {
+  reserves: TokenAmount[],
+  smartToken: TokenSymbol,
   contract: EosAccount;
+  isMultiContract: boolean;
+}
+
+export interface nRelay {
+  reserves: TokenSymbol[];
+  smartToken: TokenSymbol;
+  contract: EosAccount;
+  isMultiContract: boolean;
 }
 
 /**
@@ -142,8 +155,10 @@ export function composeMemo(
   version = 1
 ): string {
   const receiver = converters
-    .map(({ account, symbol }) => {
-      return `${account} ${symbol}`;
+    .map(({ account, symbol, multiContractSymbol }) => {
+      return `${account}${
+        multiContractSymbol ? `:${multiContractSymbol}` : ""
+      } ${symbol}`;
     })
     .join(" ");
 
@@ -156,10 +171,15 @@ export function relaysToConverters(
 ): Converter[] {
   return relays
     .map(relay =>
-      relay.reserves.map(token => ({
-        account: relay.contract,
-        symbol: token.symbol.code()
-      }))
+      relay.reserves.map(token => {
+        const base = {
+          account: relay.contract,
+          symbol: token.symbol.code()
+        };
+        return relay.isMultiContract
+          ? { ...base, multiContractSymbol: relay.smartToken.symbol.code() }
+          : base;
+      })
     )
     .reduce((prev, curr) => prev.concat(curr))
     .filter(converter => converter.symbol !== from.code())
