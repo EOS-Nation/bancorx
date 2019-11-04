@@ -197,7 +197,7 @@ test("removeRelay function works", () => {
   ]);
 });
 
-test("getOpposite symbol function works", () => {
+test.only("getOpposite symbol function works", () => {
   expect(bancorx.getOppositeSymbol(BNTandEOSDT, EOSDT)).toEqual(BNT);
 });
 
@@ -215,13 +215,23 @@ test("createPath works", () => {
   ]);
 
   expect(bancorx.createPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
+
+  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+    CATandEOSDT
+  ]);
+});
+
+test.only("createPath works with symbols", async () => {
+  const noice = bancorx.createPath(new Symbol("BNTEOS", 4), BTC, relays);
+  console.log(noice, "was noice", noice.length);
+  expect(noice).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
 });
 
 test("relays to converters", () => {
   let res = bancorx.createPath(EOS, CAT, relays);
   console.log(bancorx.relaysToConverters(EOS, res));
   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-    { account: "rockup.xyz", symbol: "BNT" },
+    { account: "rockup.xz", symbol: "BNT" },
     { account: "zomglol", symbol: "EOSDT" },
     { account: "fwefwef", symbol: "CAT" }
   ]);
@@ -230,7 +240,7 @@ test("relays to converters", () => {
   expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC, BTCandDOG]);
 
   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-    { account: "rockup.xyz", symbol: "BNT" },
+    { account: "rockup.xz", symbol: "BNT" },
     { account: "zomglol", symbol: "EOSDT" },
     { account: "rockup.xyz", symbol: "BTC" },
     { account: "rockup.zxc", symbol: "DOG", multiContractSymbol: "BTCDOG" }
@@ -277,7 +287,7 @@ class BancorCalculator extends AbstractBancorCalculator {
 
 //  [`4.0000 BLU`, `103.0000 BLU`, `97.0875 RED`, `3.6294 RED`],
 
-test.only("bancor calculator works", async () => {
+test("bancor calculator works", async () => {
   const x = new BancorCalculator(relays);
   // console.log(x.estimateReturn(split(`1.0000 BTC`), EOSDT))
   expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
