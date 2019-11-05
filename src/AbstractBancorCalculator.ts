@@ -80,4 +80,8 @@ export abstract class AbstractBancorCalculator {
     contractName: EosAccount,
     smartSymbol: string
   ): Promise<Asset[]>;
+  abstract async fetchSmartTokenSupply(
+    contractName: EosAccount,
+    symbolCode: string
+  ): Promise<Asset>;
 }

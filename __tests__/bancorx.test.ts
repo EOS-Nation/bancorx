@@ -785,23 +785,23 @@ const myRelays = [
   {
     contractName: "rockup.xyz",
     reserves: [split(`103.0000 BTC`), split(`97.0875 EOSDT`)]
-  },
-  {
-    contractName: "rockup.xyz",
-    reserves: [split(`103.0000 BTC`), split(`97.0875 EOSDT`)]
   }
 ];
 
 class BancorCalculator extends AbstractBancorCalculator {
   async fetchMultiRelayReserves(contractName: string, symbolCode: string) {
-    await wait(100);
+    await wait();
     return [split(`1.0000 EOS`), split(`10.1000000000`)];
   }
 
   async fetchSingleRelayReserves(contractName: string) {
-    await wait(100);
+    await wait();
     return myRelays.find(reserve => reserve.contractName == contractName)!
       .reserves;
+  }
+
+  async fetchSmartTokenSupply(contractName: string, symbolCode: string) {
+    await wait();
   }
 }
 
