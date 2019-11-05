@@ -56,7 +56,7 @@ test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
     });
 });
 
-test.only("bancorx.composeMemo", () => {
+test("bancorx.composeMemo", () => {
   const { CUSD, BNT } = bancorx.relays;
   const minReturn = "3.17";
   const destAccount = "<account>";
@@ -97,7 +97,7 @@ const EOSDTandBTC: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BNTBTC", 4)
+    symbol: new Symbol("BTCDT", 4)
   },
   contract: "rockup.xyz",
   isMultiContract: false
@@ -189,42 +189,33 @@ const relays: bancorx.nRelay[] = [
   BTCandDOG
 ];
 
-test("removeRelay function works", () => {
-  expect(bancorx.removeChoppedRelay(relays, CATandEOSDT)).toEqual([
-    BNTandEOSDT,
-    EOSandBNT,
-    EOSDTandBTC,
-    BTCandDOG
-  ]);
-});
-
-test.only("getOpposite symbol function works", () => {
+test("getOpposite symbol function works", () => {
   expect(bancorx.getOppositeSymbol(BNTandEOSDT, EOSDT)).toEqual(BNT);
 });
 
 test("createPath works", () => {
-  expect(bancorx.findPath(EOS, BTC, relays)).toEqual([
+  expect(bancorx.createPath(EOS, BTC, relays)).toEqual([
     EOSandBNT,
     BNTandEOSDT,
     EOSDTandBTC
   ]);
 
-  expect(bancorx.findPath(EOS, CAT, relays)).toEqual([
+  expect(bancorx.createPath(EOS, CAT, relays)).toEqual([
     EOSandBNT,
     BNTandEOSDT,
     CATandEOSDT
   ]);
 
-  expect(bancorx.findPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
+  expect(bancorx.createPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
 
-  expect(bancorx.findPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
     CATandEOSDT
   ]);
 });
 
 // relayHasBothSymbols
 
-test.only("can chop relays", () => {
+test("can chop relays", () => {
   const choppedRelays = bancorx.chopRelays(relays);
   expect(choppedRelays).toEqual([
     {
@@ -232,17 +223,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: {
-            _code: "EOSDT",
-            precision: 4
-          }
+          symbol: new Symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTDT",
-            precision: 4
-          }
+          symbol: new Symbol("BNTDT", 4)
         }
       ]
     },
@@ -251,17 +236,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "bntbntbnt",
-          symbol: {
-            _code: "BNT",
-            precision: 4
-          }
+          symbol: new Symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTDT",
-            precision: 4
-          }
+          symbol: new Symbol("BNTDT", 4)
         }
       ]
     },
@@ -270,17 +249,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "eosio.token",
-          symbol: {
-            _code: "EOS",
-            precision: 4
-          }
+          symbol: new Symbol("EOS", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTEOS",
-            precision: 4
-          }
+          symbol: new Symbol("BNTEOS", 4)
         }
       ]
     },
@@ -289,17 +262,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "bntbntbntbnt",
-          symbol: {
-            _code: "BNT",
-            precision: 4
-          }
+          symbol: new Symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTEOS",
-            precision: 4
-          }
+          symbol: new Symbol("BNTEOS", 4)
         }
       ]
     },
@@ -308,17 +275,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "sdasd",
-          symbol: {
-            _code: "EOSDT",
-            precision: 4
-          }
+          symbol: new Symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTBTC",
-            precision: 4
-          }
+          symbol: new Symbol("BTCDT", 4)
         }
       ]
     },
@@ -327,17 +288,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BTC",
-            precision: 4
-          }
+          symbol: new Symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTBTC",
-            precision: 4
-          }
+          symbol: new Symbol("BTCDT", 4)
         }
       ]
     },
@@ -346,17 +301,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: {
-            _code: "EOSDT",
-            precision: 4
-          }
+          symbol: new Symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTCAT",
-            precision: 4
-          }
+          symbol: new Symbol("BNTCAT", 4)
         }
       ]
     },
@@ -365,17 +314,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "catcat",
-          symbol: {
-            _code: "CAT",
-            precision: 4
-          }
+          symbol: new Symbol("CAT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BNTCAT",
-            precision: 4
-          }
+          symbol: new Symbol("BNTCAT", 4)
         }
       ]
     },
@@ -384,17 +327,11 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "dwe",
-          symbol: {
-            _code: "BTC",
-            precision: 4
-          }
+          symbol: new Symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BTCDOG",
-            precision: 4
-          }
+          symbol: new Symbol("BTCDOG", 4)
         }
       ]
     },
@@ -403,24 +340,18 @@ test.only("can chop relays", () => {
       reserves: [
         {
           contract: "fwet",
-          symbol: {
-            _code: "DOG",
-            precision: 4
-          }
+          symbol: new Symbol("DOG", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: {
-            _code: "BTCDOG",
-            precision: 4
-          }
+          symbol: new Symbol("BTCDOG", 4)
         }
       ]
     }
   ]);
 });
 
-test.only("can chop relay", () => {
+test("can chop relay", () => {
   const EOSandBNT: nRelay = {
     reserves: [
       {
@@ -472,7 +403,7 @@ test.only("can chop relay", () => {
   ]);
 });
 
-test.only("remove chopped relay", () => {
+test("remove chopped relay", () => {
   const EOSandBNT: nRelay = {
     reserves: [
       {
@@ -558,7 +489,7 @@ test.only("remove chopped relay", () => {
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTBTC", 4)
+              symbol: new Symbol("BTCDT", 4)
             }
           ]
         },
@@ -571,7 +502,7 @@ test.only("remove chopped relay", () => {
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTBTC", 4)
+              symbol: new Symbol("BTCDT", 4)
             }
           ]
         },
@@ -679,7 +610,7 @@ test.only("remove chopped relay", () => {
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTBTC", 4)
+          symbol: new Symbol("BTCDT", 4)
         }
       ]
     },
@@ -692,7 +623,7 @@ test.only("remove chopped relay", () => {
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTBTC", 4)
+          symbol: new Symbol("BTCDT", 4)
         }
       ]
     },
@@ -751,7 +682,7 @@ test.only("remove chopped relay", () => {
   ]);
 });
 
-test.only("can get oppositeSymbol", () => {
+test("can get oppositeSymbol", () => {
   const EOSandBNT: nRelay = {
     reserves: [
       {
@@ -776,7 +707,7 @@ test.only("can get oppositeSymbol", () => {
   expect(res).toEqual(new Symbol("BNTEOS", 4));
 });
 
-test.only("relay has both symbols", () => {
+test("relay has both symbols", () => {
   const EOSandBNT: nRelay = {
     reserves: [
       {
@@ -806,43 +737,41 @@ test.only("relay has both symbols", () => {
   expect(func(choppedRelay)).toBe(false);
 });
 
-test.only("createPath works with symbols", async () => {
+test("createPath works with symbols", async () => {
   expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
-    bancorx.chopRelay(CATandEOSDT)[0]
+    CATandEOSDT
   ]);
 
   const res = bancorx.createPath(EOS, BTC, relays);
-  console.log(JSON.stringify(res))
-  expect(res).toEqual(5);
+  expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC]);
 });
 
-// test("relays to converters", () => {
-//   let res = bancorx.findPath(EOS, CAT, relays);
-//   console.log(bancorx.relaysToConverters(EOS, res));
-//   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-//     { account: "rockup.xz", symbol: "BNT" },
-//     { account: "zomglol", symbol: "EOSDT" },
-//     { account: "fwefwef", symbol: "CAT" }
-//   ]);
+test("relays to converters", () => {
+  let res = bancorx.createPath(EOS, CAT, relays);
+  expect(bancorx.relaysToConverters(EOS, res)).toEqual([
+    { account: "rockup.xz", symbol: "BNT" },
+    { account: "zomglol", symbol: "EOSDT" },
+    { account: "fwefwef", symbol: "CAT" }
+  ]);
 
-//   res = bancorx.findPath(EOS, DOG, relays);
-//   expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC, BTCandDOG]);
+  res = bancorx.createPath(EOS, DOG, relays);
+  expect(res).toEqual([EOSandBNT, BNTandEOSDT, EOSDTandBTC, BTCandDOG]);
 
-//   expect(bancorx.relaysToConverters(EOS, res)).toEqual([
-//     { account: "rockup.xz", symbol: "BNT" },
-//     { account: "zomglol", symbol: "EOSDT" },
-//     { account: "rockup.xyz", symbol: "BTC" },
-//     { account: "rockup.zxc", symbol: "DOG", multiContractSymbol: "BTCDOG" }
-//   ]);
-// });
+  expect(bancorx.relaysToConverters(EOS, res)).toEqual([
+    { account: "rockup.xz", symbol: "BNT" },
+    { account: "zomglol", symbol: "EOSDT" },
+    { account: "rockup.xyz", symbol: "BTC" },
+    { account: "rockup.zxc", symbol: "DOG", multiContractSymbol: "BTCDOG" }
+  ]);
+});
 
-// test("compose memo works with multicontracts", () => {
-//   const relaysList = bancorx.findPath(EOS, DOG, relays);
-//   const converters = bancorx.relaysToConverters(EOS, relaysList);
-//   expect(bancorx.composeMemo(converters, "0.0001", "thekellygang", 1)).toBe(
-//     `1,rockup.xyz BNT zomglol EOSDT rockup.xyz BTC rockup.zxc:BTCDOG DOG,0.0001,thekellygang`
-//   );
-// });
+test("compose memo works with multicontracts", () => {
+  const relaysList = bancorx.createPath(EOS, DOG, relays);
+  const converters = bancorx.relaysToConverters(EOS, relaysList);
+  expect(bancorx.composeMemo(converters, "0.0001", "thekellygang", 1)).toBe(
+    `1,rockup.xz BNT zomglol EOSDT rockup.xyz BTC rockup.zxc:BTCDOG DOG,0.0001,thekellygang`
+  );
+});
 
 const myRelays = [
   {
@@ -856,29 +785,28 @@ const myRelays = [
   {
     contractName: "rockup.xyz",
     reserves: [split(`103.0000 BTC`), split(`97.0875 EOSDT`)]
+  },
+  {
+    contractName: "rockup.xyz",
+    reserves: [split(`103.0000 BTC`), split(`97.0875 EOSDT`)]
   }
 ];
 
 class BancorCalculator extends AbstractBancorCalculator {
   async fetchMultiRelayReserves(contractName: string, symbolCode: string) {
     await wait(100);
-    console.log("DERP");
     return [split(`1.0000 EOS`), split(`10.1000000000`)];
   }
 
   async fetchSingleRelayReserves(contractName: string) {
-    console.log(contractName);
     await wait(100);
     return myRelays.find(reserve => reserve.contractName == contractName)!
       .reserves;
   }
 }
 
-//  [`4.0000 BLU`, `103.0000 BLU`, `97.0875 RED`, `3.6294 RED`],
-
 test("bancor calculator works", async () => {
   const x = new BancorCalculator(relays);
-  // console.log(x.estimateReturn(split(`1.0000 BTC`), EOSDT))
   expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
     split(`3.6294 EOSDT`)
   );

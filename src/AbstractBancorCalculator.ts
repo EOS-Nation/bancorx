@@ -2,8 +2,6 @@ import { Symbol, Asset } from "eos-common";
 import _ from "underscore";
 import {
   nRelay,
-  findPath,
-  relaysToConverters,
   EosAccount,
   HydratedRelay,
   TokenSymbol,
@@ -73,7 +71,6 @@ export abstract class AbstractBancorCalculator {
     }
 
     return hydratedRelays;
-
   }
 
   abstract async fetchSingleRelayReserves(

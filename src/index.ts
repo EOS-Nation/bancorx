@@ -166,32 +166,32 @@ export function composeMemo(
   return `${version},${receiver},${minReturn},${destAccount}`;
 }
 
-// export function relaysToConverters(
-//   from: Symbol,
-//   relays: nRelay[]
-// ): Converter[] {
-//   return relays
-//     .map(relay =>
-//       relay.reserves.map(token => {
-//         const base = {
-//           account: relay.contract,
-//           symbol: token.symbol.code()
-//         };
-//         return relay.isMultiContract
-//           ? { ...base, multiContractSymbol: relay.smartToken.symbol.code() }
-//           : base;
-//       })
-//     )
-//     .reduce((prev, curr) => prev.concat(curr))
-//     .filter(converter => converter.symbol !== from.code())
-//     .reduce((accum, item) => {
-//       return accum.find(
-//         (converter: Converter) => converter.symbol == item.symbol
-//       )
-//         ? accum
-//         : [...accum, item];
-//     }, []);
-// }
+export function relaysToConverters(
+  from: Symbol,
+  relays: nRelay[]
+): Converter[] {
+  return relays
+    .map(relay =>
+      relay.reserves.map(token => {
+        const base = {
+          account: relay.contract,
+          symbol: token.symbol.code()
+        };
+        return relay.isMultiContract
+          ? { ...base, multiContractSymbol: relay.smartToken.symbol.code() }
+          : base;
+      })
+    )
+    .reduce((prev, curr) => prev.concat(curr))
+    .filter(converter => converter.symbol !== from.code())
+    .reduce((accum, item) => {
+      return accum.find(
+        (converter: Converter) => converter.symbol == item.symbol
+      )
+        ? accum
+        : [...accum, item];
+    }, []);
+}
 
 export function removeChoppedRelay(
   relays: ChoppedRelay[],
@@ -277,17 +277,46 @@ export function findPath(
   );
 }
 
+function relayOffersSymbols(symbol1: Symbol, symbol2: Symbol) {
+  return function(relay: nRelay) {
+    const inReserves = relay.reserves.every(
+      token => token.symbol.isEqual(symbol1) || token.symbol.isEqual(symbol2)
+    );
+    if (inReserves) return inReserves;
+    const inReserve = relay.reserves.some(
+      token => token.symbol.isEqual(symbol1) || token.symbol.isEqual(symbol2)
+    );
+    const inSmartToken =
+      relay.smartToken.symbol.isEqual(symbol1) ||
+      relay.smartToken.symbol.isEqual(symbol2);
+    return inReserve && inSmartToken;
+  };
+}
+
+// Opposite of unChopRelays
+export function unChopRelays(choppedRelays: ChoppedRelay[], relays: nRelay[]) {
+  return choppedRelays.reduce((accum: nRelay[], choppedRelay: ChoppedRelay) => {
+    const relayOfInterest = relayOffersSymbols(
+      choppedRelay.reserves[0].symbol,
+      choppedRelay.reserves[1].symbol
+    );
+    const alreadyExistingRelay = accum.find(relayOfInterest);
+    return alreadyExistingRelay
+      ? accum
+      : [...accum, relays.find(relayOfInterest)!];
+  }, []);
+}
+
 export function createPath(
   from: Symbol,
   to: Symbol,
   relays: nRelay[]
-): ChoppedRelay[] {
+): nRelay[] {
   const choppedRelays = chopRelays(relays);
-  return this.findPath(from, to, choppedRelays);
+  const choppedRelaysPath: ChoppedRelay[] = findPath(from, to, choppedRelays);
+  const wholeRelaysPath: nRelay[] = unChopRelays(
+    choppedRelaysPath,
+    relays
+  ) as nRelay[];
+  return wholeRelaysPath;
 }
-
-// Glue function
-// Opposite of the chop function
-// Atm the path returned is too verbose, needs to connect them together
-
-// Should bring MultiContract boolean
