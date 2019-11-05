@@ -53,10 +53,10 @@ export interface nRelay {
  * const balanceTo = split(`429519.5539120331 BNT`); // BNT
  * const amount = split(`1.0000 EOS`);
  *
- * bancorx.bancorFormula(balanceFrom, balanceTo, amount)
+ * bancorx.calculateReturn(balanceFrom, balanceTo, amount)
  * // => split(`5.519748143058556 BNT`)
  */
-export function bancorFormula(
+export function calculateReturn(
   balanceFrom: Asset,
   balanceTo: Asset,
   amount: Asset

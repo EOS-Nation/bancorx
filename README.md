@@ -72,7 +72,7 @@ const balance = await rpc.get_currency_balance(code, account, symbol);
 
 #### Table of Contents
 
--   [bancorFormula](#bancorformula)
+-   [calculateReturn](#calculateReturn)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
 -   [bancorInverseFormula](#bancorinverseformula)
@@ -87,7 +87,7 @@ const balance = await rpc.get_currency_balance(code, account, symbol);
 -   [relays](#relays)
     -   [Examples](#examples-4)
 
-### bancorFormula
+### calculateReturn
 
 Bancor Formula
 
@@ -102,18 +102,18 @@ Formula:
 
 #### Parameters
 
--   `balanceFrom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
--   `balanceTo` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
--   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to convert
+-   `balanceFrom` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** from token balance in the relay
+-   `balanceTo` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** to token balance in the relay
+-   `amount` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** amount to convert
 
 #### Examples
 
 ```javascript
-const balanceFrom = 77814.0638 // EOS
-const balanceTo = 429519.5539120331 // BNT
-const amount = 1
+const balanceFrom = split(`77814.0638 EOS`)
+const balanceTo = split(`429519.5539120331 BNT`)
+const amount = split(`1.0000 EOS`)
 
-bancorx.bancorFormula(balanceFrom, balanceTo, amount)
+bancorx.calculateReturn(balanceFrom, balanceTo, amount)
 // => 5.519748143058556
 ```
 

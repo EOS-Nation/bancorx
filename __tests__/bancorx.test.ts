@@ -35,7 +35,7 @@ test("bancorx.bancorFormula - EOS/BNT", () => {
       split(reward)
     ])
     .forEach(([amount, blueBalance, redBalance, reward]) => {
-      expect(bancorx.bancorFormula(blueBalance, redBalance, amount)).toEqual(
+      expect(bancorx.calculateReturn(blueBalance, redBalance, amount)).toEqual(
         reward
       );
     });

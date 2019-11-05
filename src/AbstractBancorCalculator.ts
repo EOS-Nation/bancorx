@@ -5,7 +5,7 @@ import {
   EosAccount,
   HydratedRelay,
   TokenSymbol,
-  bancorFormula,
+  calculateReturn,
   TokenAmount,
   createPath
 } from "./index";
@@ -29,7 +29,7 @@ export abstract class AbstractBancorCalculator {
         (reserve: TokenAmount) =>
           !reserve.amount.symbol.isEqual(lastReward.symbol)
       )!;
-      const result = bancorFormula(
+      const result = calculateReturn(
         fromReserveBalance.amount,
         toReserveBalance.amount,
         lastReward
