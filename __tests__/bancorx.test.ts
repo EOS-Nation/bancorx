@@ -41,7 +41,7 @@ test("bancorx.bancorFormula - EOS/BNT", () => {
     });
 });
 
-test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
+test.skip("bancorx.calculateCost - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -50,9 +50,9 @@ test.skip("bancorx.bancorInverseFormula - EOS/BNT", () => {
       split(reward)
     ])
     .forEach(([amount, blueBalance, redBalance, reward]) => {
-      expect(
-        bancorx.bancorInverseFormula(blueBalance, redBalance, reward)
-      ).toEqual(amount);
+      expect(bancorx.calculateCost(blueBalance, redBalance, reward)).toEqual(
+        amount
+      );
     });
 });
 

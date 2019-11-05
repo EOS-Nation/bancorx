@@ -101,10 +101,10 @@ export function calculateReturn(
  * const balanceTo = 429519.5539120331 // BNT
  * const amountDesired = 1
  *
- * bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
+ * bancorx.calculateCost(balanceFrom, balanceTo, amountDesired)
  * // => 0.18116577989712823
  */
-export function bancorInverseFormula(
+export function calculateCost(
   balanceFrom: Asset,
   balanceTo: Asset,
   amountDesired: Asset

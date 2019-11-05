@@ -75,7 +75,7 @@ const balance = await rpc.get_currency_balance(code, account, symbol);
 -   [calculateReturn](#calculateReturn)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
--   [bancorInverseFormula](#bancorinverseformula)
+-   [calculateCost](#calculateCost)
     -   [Parameters](#parameters-1)
     -   [Examples](#examples-1)
 -   [composeMemo](#composememo)
@@ -117,9 +117,9 @@ bancorx.calculateReturn(balanceFrom, balanceTo, amount)
 // => 5.519748143058556
 ```
 
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed amount
+Returns **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** computed amount
 
-### bancorInverseFormula
+### calculateCost
 
 Bancor Inverse Formula
 
@@ -134,22 +134,22 @@ Inverse Formula:
 
 #### Parameters
 
--   `balanceFrom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** from token balance in the relay
--   `balanceTo` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** to token balance in the relay
--   `amountDesired` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to desired
+-   `balanceFrom` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** from token balance in the relay
+-   `balanceTo` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** to token balance in the relay
+-   `amountDesired` **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** amount to desired
 
 #### Examples
 
 ```javascript
-const balanceFrom = 77814.0638 // EOS
-const balanceTo = 429519.5539120331 // BNT
-const amountDesired = 1
+const balanceFrom = split(`77814.0638 EOS`)
+const balanceTo = split(`429519.5539120331 BNT`)
+const amountDesired = split(`1.0000 EOS`)
 
-bancorx.bancorInverseFormula(balanceFrom, balanceTo, amountDesired)
+bancorx.calculateCost(balanceFrom, balanceTo, amountDesired)
 // => 0.18116577989712823
 ```
 
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** computed desired amount
+Returns **[Asset](https://github.com/EOS-Nation/eos-common#constructor)** computed desired amount
 
 ### composeMemo
 
