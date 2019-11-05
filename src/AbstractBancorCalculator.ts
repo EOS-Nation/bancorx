@@ -7,7 +7,8 @@ import {
   TokenSymbol,
   calculateReturn,
   TokenAmount,
-  createPath
+  createPath,
+  calculateCost
 } from "./index";
 
 export abstract class AbstractBancorCalculator {
@@ -15,6 +16,37 @@ export abstract class AbstractBancorCalculator {
 
   constructor(relays: nRelay[]) {
     this.relays = relays;
+  }
+
+  public async estimateCost(
+    amountDesired: Asset,
+    from: Symbol
+  ): Promise<Asset> {
+    const reverseRelaysRequired = createPath(
+      amountDesired.symbol,
+      from,
+      this.relays
+    );
+
+    const hydratedRelays = await this.hydrateRelays(reverseRelaysRequired);
+
+    const costAmount = hydratedRelays.reduce((lastCost, relay) => {
+      const fromReserveBalance = relay.reserves.find((reserve: TokenAmount) =>
+        reserve.amount.symbol.isEqual(lastCost.symbol)
+      )!;
+      const toReserveBalance = relay.reserves.find(
+        (reserve: TokenAmount) =>
+          !reserve.amount.symbol.isEqual(lastCost.symbol)
+      )!;
+
+      const result = calculateCost(
+        toReserveBalance.amount,
+        fromReserveBalance.amount,
+        lastCost
+      );
+      return result;
+    }, amountDesired);
+    return costAmount;
   }
 
   public async estimateReturn(amount: Asset, to: Symbol): Promise<Asset> {

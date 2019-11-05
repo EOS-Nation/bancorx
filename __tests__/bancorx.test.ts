@@ -1,10 +1,9 @@
 import * as bancorx from "../src";
-import { split, Symbol, Asset } from "eos-common";
 import _ from "underscore";
-import { nRelay, ChoppedRelay } from "../src/index";
+import { split, Symbol } from "eos-common";
+import { nRelay } from "../src/index";
 import { AbstractBancorCalculator } from "../src/AbstractBancorCalculator";
 import wait from "waait";
-import { Converter } from "../src/interfaces";
 
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
@@ -26,7 +25,7 @@ const trades = [
   [`0.0010 EOS`, `2.8138 EOS`, `0.24864909 BTC`, `0.00008833 BTC`]
 ];
 
-test("bancorx.bancorFormula - EOS/BNT", () => {
+test("bancorx.calculateReturn - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -160,8 +159,7 @@ const BNTandEOSDT: nRelay = {
   isMultiContract: false
 };
 
-// there is a new RElay and old relay overlap
-// write test for 'removeRelay' method.
+// write test for 'removeRelay' method
 const CATandEOSDT: nRelay = {
   reserves: [
     {
@@ -802,10 +800,11 @@ class BancorCalculator extends AbstractBancorCalculator {
 
   async fetchSmartTokenSupply(contractName: string, symbolCode: string) {
     await wait();
+    return split(`1.0000 EOS`);
   }
 }
 
-test("bancor calculator works", async () => {
+test("bancor calculator - estimate return works", async () => {
   const x = new BancorCalculator(relays);
   expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
     split(`3.6294 EOSDT`)
@@ -814,4 +813,15 @@ test("bancor calculator works", async () => {
   expect(await x.estimateReturn(split(`4.5000 EOS`), EOSDT)).toStrictEqual(
     split(`3.4838 EOSDT`)
   );
+});
+
+test("bancor calculator - estimate cost works", async () => {
+  let bancorCalculator = new BancorCalculator(relays);
+  expect(
+    await bancorCalculator.estimateCost(split(`3.6294 EOSDT`), BTC)
+  ).toStrictEqual(split(`4.0000 BTC`));
+
+  expect(
+    await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), EOS)
+  ).toStrictEqual(split(`4.5000 EOS`));
 });
