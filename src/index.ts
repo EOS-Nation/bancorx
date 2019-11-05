@@ -1,7 +1,7 @@
-import { Converter } from "./interfaces";
+import { Converter, nRelay } from "./interfaces";
 import { Asset, Symbol } from "eos-common";
 export { relays } from "./Relays";
-// export { BancorCalculator, Relay, Token } from "./BancorCalculator";
+export { nRelay } from "./interfaces";
 import Decimal from "decimal.js";
 import _ from "underscore";
 
@@ -184,7 +184,7 @@ export function relaysToConverters(
     )
     .reduce((prev, curr) => prev.concat(curr))
     .filter(converter => converter.symbol !== from.code())
-    .reduce((accum, item) => {
+    .reduce((accum: Converter[], item: Converter) => {
       return accum.find(
         (converter: Converter) => converter.symbol == item.symbol
       )

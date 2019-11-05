@@ -1,3 +1,5 @@
+import { Symbol } from "eos-common";
+
 export interface Relay {
   code: string;
   account: string;
@@ -50,4 +52,17 @@ export interface Converter {
   account: string;
   symbol: string;
   multiContractSymbol?: string;
+}
+
+export type EosAccount = string;
+
+export interface Token {
+  contract: EosAccount;
+  symbol: Symbol;
+}
+
+export interface nRelay {
+  reserves: Token[];
+  smartToken: Token;
+  contract: EosAccount;
 }
