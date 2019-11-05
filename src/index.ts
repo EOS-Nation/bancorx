@@ -1,35 +1,8 @@
-import { Converter, nRelay } from "./interfaces";
+import { Converter, nRelay, TokenSymbol, ChoppedRelay } from "./interfaces";
 import { Asset, Symbol } from "eos-common";
 export { relays } from "./Relays";
-export { nRelay } from "./interfaces";
 import Decimal from "decimal.js";
 import _ from "underscore";
-
-export type EosAccount = string;
-
-export interface TokenSymbol {
-  contract: EosAccount;
-  symbol: Symbol;
-}
-
-export interface TokenAmount {
-  contract: EosAccount;
-  amount: Asset;
-}
-
-export interface HydratedRelay {
-  reserves: TokenAmount[];
-  smartToken: TokenSymbol;
-  contract: EosAccount;
-  isMultiContract: boolean;
-}
-
-export interface nRelay {
-  reserves: TokenSymbol[];
-  smartToken: TokenSymbol;
-  contract: EosAccount;
-  isMultiContract: boolean;
-}
 
 /**
  * Bancor Formula
@@ -216,11 +189,6 @@ export function relayHasBothSymbols(
       token => token.symbol.isEqual(symbol1) || token.symbol.isEqual(symbol2)
     );
   };
-}
-
-export interface ChoppedRelay {
-  contract: string;
-  reserves: TokenSymbol[];
 }
 
 export const chopRelay = (item: nRelay): ChoppedRelay[] => {

@@ -1,4 +1,4 @@
-import { Symbol } from "eos-common";
+import { Symbol, Asset } from "eos-common";
 
 export interface Relay {
   code: string;
@@ -61,8 +61,31 @@ export interface Token {
   symbol: Symbol;
 }
 
-export interface nRelay {
-  reserves: Token[];
-  smartToken: Token;
+export interface TokenSymbol {
   contract: EosAccount;
+  symbol: Symbol;
+}
+
+export interface ChoppedRelay {
+  contract: string;
+  reserves: TokenSymbol[];
+}
+
+export interface TokenAmount {
+  contract: EosAccount;
+  amount: Asset;
+}
+
+export interface HydratedRelay {
+  reserves: TokenAmount[];
+  smartToken: TokenSymbol;
+  contract: EosAccount;
+  isMultiContract: boolean;
+}
+
+export interface nRelay {
+  reserves: TokenSymbol[];
+  smartToken: TokenSymbol;
+  contract: EosAccount;
+  isMultiContract: boolean;
 }
