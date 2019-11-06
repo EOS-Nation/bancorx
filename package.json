@@ -1,6 +1,6 @@
 {
     "name": "bancorx",
-    "version": "0.2.66",
+    "version": "0.2.7",
     "description": "BancorX Utility",
     "main": "build/index.js",
     "types": "index.d.ts",
