@@ -81,7 +81,8 @@ export abstract class AbstractBancorCalculator {
         contract: reserve.contract
       }))
     };
-    if (result.reserves.every(reserve => reserve.amount)) return result;
+    if (result.reserves.every(reserve => Boolean(reserve.amount)))
+      return result;
     throw new Error("Reserve mismatch in relays");
   }
 

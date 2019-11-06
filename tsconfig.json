@@ -5,6 +5,7 @@
         "module": "commonjs",
         "declaration": true,
         "sourceMap": true,
+        "lib": ["es6", "esnext.asynciterable"],
 
         /* Strict Type-Checking Options */
         "strict": true,
