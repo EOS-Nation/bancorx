@@ -205,7 +205,7 @@ export const chopRelay = (item: nRelay): ChoppedRelay[] => {
 };
 
 export const chopRelays = (relays: nRelay[]) => {
-  return relays.reduce((accum, item) => {
+  return relays.reduce((accum: ChoppedRelay[], item: nRelay) => {
     const [relay1, relay2] = chopRelay(item);
     return [...accum, relay1, relay2];
   }, []);

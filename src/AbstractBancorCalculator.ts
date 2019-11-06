@@ -1,15 +1,13 @@
 import { Symbol, Asset } from "eos-common";
 import _ from "underscore";
+import { calculateReturn, createPath, calculateCost } from "./index";
 import {
   nRelay,
   EosAccount,
   HydratedRelay,
-  TokenSymbol,
-  calculateReturn,
   TokenAmount,
-  createPath,
-  calculateCost
-} from "./index";
+  TokenSymbol
+} from "./interfaces";
 
 export abstract class AbstractBancorCalculator {
   relays: nRelay[];
