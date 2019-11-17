@@ -84,6 +84,8 @@ export function calculateCost(
 ) {
   if (!balanceTo.symbol.isEqual(amountDesired.symbol))
     throw new Error("From symbol does not match amount symbol");
+  if (amountDesired.amount >= balanceTo.amount)
+    throw new Error("Impossible to buy the entire reserve or more");
   const balanceFromNumber = balanceFrom.toDecimal();
   const balanceToNumber = balanceTo.toDecimal();
   const amountNumber = amountDesired.toDecimal();

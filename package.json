@@ -1,6 +1,6 @@
 {
     "name": "bancorx",
-    "version": "0.2.71",
+    "version": "0.2.72",
     "description": "BancorX Utility",
     "main": "build/index.js",
     "types": "build/index.d.ts",
@@ -24,7 +24,8 @@
     },
     "dependencies": {
         "eos-common": "^0.1.36",
-        "underscore": "^1.9.1"
+        "underscore": "^1.9.1",
+        "waait": "^1.0.5"
     },
     "devDependencies": {
         "@types/jest": "*",

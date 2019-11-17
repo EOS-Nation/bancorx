@@ -40,6 +40,27 @@ test("bancorx.calculateReturn - EOS/BNT", () => {
     });
 });
 
+test("calculate Cost will fail if attempting to buy entire reserve or more", () => {
+  expect.assertions(2);
+  const bntAsset = split("10.1000000000 BNT");
+  const eosAsset = split("1.0000 EOS");
+  const desired = split("1.0000 EOS");
+  try {
+    bancorx.calculateCost(bntAsset, eosAsset, desired);
+  } catch (e) {
+    expect(e.message).toBe("Impossible to buy the entire reserve or more");
+  }
+
+  const bntAsset2 = split("10.1000000000 BNT");
+  const eosAsset2 = split("1.0000 EOS");
+  const desired2 = split("1.1000 EOS");
+  try {
+    bancorx.calculateCost(bntAsset2, eosAsset2, desired2);
+  } catch (e) {
+    expect(e.message).toBe("Impossible to buy the entire reserve or more");
+  }
+});
+
 test.skip("bancorx.calculateCost - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
