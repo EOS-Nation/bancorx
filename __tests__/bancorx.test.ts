@@ -810,7 +810,7 @@ const myRelays = [
 class BancorCalculator extends AbstractBancorCalculator {
   async fetchMultiRelayReserves(contractName: string, symbolCode: string) {
     await wait();
-    return [split(`1.0000 EOS`), split(`10.1000000000`)];
+    return [split(`1.0000 EOS`), split(`10.1000000000 BNT`)];
   }
 
   async fetchSingleRelayReserves(contractName: string) {
@@ -823,10 +823,14 @@ class BancorCalculator extends AbstractBancorCalculator {
     await wait();
     return split(`1.0000 EOS`);
   }
+
+  async fetchRelays() {
+    return relays
+  }
 }
 
 test("bancor calculator - estimate return works", async () => {
-  const x = new BancorCalculator(relays);
+  const x = new BancorCalculator();
   expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
     split(`3.6294 EOSDT`)
   );
@@ -837,7 +841,7 @@ test("bancor calculator - estimate return works", async () => {
 });
 
 test.skip("bancor calculator - estimate cost works", async () => {
-  let bancorCalculator = new BancorCalculator(relays);
+  let bancorCalculator = new BancorCalculator();
   expect(
     await bancorCalculator.estimateCost(split(`3.6294 EOSDT`), BTC)
   ).toStrictEqual(split(`4.0000 BTC`));

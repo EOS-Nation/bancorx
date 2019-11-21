@@ -1,6 +1,8 @@
 import { Converter, nRelay, TokenSymbol, ChoppedRelay } from "./interfaces";
 import { Asset, Symbol } from "eos-common";
 export { relays } from "./Relays";
+export * from "./interfaces";
+export { AbstractBancorCalculator } from "./AbstractBancorCalculator";
 import Decimal from "decimal.js";
 import _ from "underscore";
 

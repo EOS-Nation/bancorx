@@ -10,11 +10,7 @@ import {
 } from "./interfaces";
 
 export abstract class AbstractBancorCalculator {
-  relays: nRelay[];
-
-  constructor(relays: nRelay[]) {
-    this.relays = relays;
-  }
+  constructor() {}
 
   public async estimateCost(
     amountDesired: Asset,
@@ -23,7 +19,7 @@ export abstract class AbstractBancorCalculator {
     const reverseRelaysRequired = createPath(
       amountDesired.symbol,
       from,
-      this.relays
+      await this.fetchRelays()
     );
 
     const hydratedRelays = await this.hydrateRelays(reverseRelaysRequired);
@@ -48,7 +44,11 @@ export abstract class AbstractBancorCalculator {
   }
 
   public async estimateReturn(amount: Asset, to: Symbol): Promise<Asset> {
-    const relaysRequired = createPath(amount.symbol, to, this.relays);
+    const relaysRequired = createPath(
+      amount.symbol,
+      to,
+      await this.fetchRelays()
+    );
     const hydratedRelays = await this.hydrateRelays(relaysRequired);
 
     const returnAmount = hydratedRelays.reduce((lastReward, relay) => {
@@ -115,4 +115,5 @@ export abstract class AbstractBancorCalculator {
     contractName: EosAccount,
     symbolCode: string
   ): Promise<Asset>;
+  abstract async fetchRelays(): Promise<nRelay[]>;
 }
