@@ -10,7 +10,6 @@ import {
 } from "./interfaces";
 
 export abstract class AbstractBancorCalculator {
-  constructor() {}
 
   public async estimateCost(
     amountDesired: Asset,
