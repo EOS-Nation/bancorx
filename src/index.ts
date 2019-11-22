@@ -38,6 +38,8 @@ export function calculateReturn(
 ) {
   if (!balanceFrom.symbol.isEqual(amount.symbol))
     throw new Error("From symbol does not match amount symbol");
+  if (amount.amount >= balanceFrom.amount)
+    throw new Error("Impossible to buy the entire reserve or more");
 
   Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
   const balanceFromNumber = balanceFrom.toDecimal();

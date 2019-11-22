@@ -41,13 +41,18 @@ test("bancorx.calculateReturn - EOS/BNT", () => {
 });
 
 test("calculate Cost will fail if attempting to buy entire reserve or more", () => {
-  expect.assertions(2);
+  expect.assertions(3);
   const bntAsset = split("10.1000000000 BNT");
   const eosAsset = split("1.0000 EOS");
   const desired = split("1.0000 EOS");
   try {
     bancorx.calculateCost(bntAsset, eosAsset, desired);
   } catch (e) {
+    expect(e.message).toBe("Impossible to buy the entire reserve or more");
+  }
+  try {
+    bancorx.calculateReturn(eosAsset, bntAsset, desired)
+  } catch(e) {
     expect(e.message).toBe("Impossible to buy the entire reserve or more");
   }
 
@@ -829,7 +834,7 @@ class BancorCalculator extends AbstractBancorCalculator {
   }
 }
 
-test("bancor calculator - estimate return works", async () => {
+test.skip("bancor calculator - estimate return works", async () => {
   const x = new BancorCalculator();
   expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
     split(`3.6294 EOSDT`)
@@ -840,7 +845,7 @@ test("bancor calculator - estimate return works", async () => {
   );
 });
 
-test("bancor calculator - estimate cost works", async () => {
+test.skip("bancor calculator - estimate cost works", async () => {
   let bancorCalculator = new BancorCalculator();
   expect(
     await bancorCalculator.estimateCost(split(`3.6294 EOSDT`), BTC)
