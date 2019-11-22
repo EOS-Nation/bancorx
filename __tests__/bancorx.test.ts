@@ -855,24 +855,3 @@ test.skip("bancor calculator - estimate cost works", async () => {
     await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), BTC)
   ).toStrictEqual(split(`4.0000 BTC`));
 });
-
-test("works with a difference in precision", async () => {
-
-  // Check accuracy 
-
-  // expect(
-  //   bancorx.calculateReturn(
-  //     split("5.0001 EMT"),
-  //     split("1.0000000000 BNT"),
-  //     split("0.9999 EMT")
-  //   )
-  // ).toStrictEqual(split(`0.1666638889 BNT`));
-
-  expect(
-    bancorx.calculateCost(
-      split("5.0001 EMT"),
-      split("1.0000000000 BNT"),
-      split(`0.1666638889 BNT`)
-    )
-  ).toStrictEqual(split(`0.9999 EMT`));
-});
