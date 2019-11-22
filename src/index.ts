@@ -38,20 +38,23 @@ export function calculateReturn(
 ) {
   if (!balanceFrom.symbol.isEqual(amount.symbol))
     throw new Error("From symbol does not match amount symbol");
+
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
   const balanceFromNumber = balanceFrom.toDecimal();
   const balanceToNumber = balanceTo.toDecimal();
   const amountNumber = amount.toDecimal();
 
   const reward = amountNumber
     .div(balanceFromNumber.plus(amountNumber))
-    .times(balanceToNumber)
-    .toFixed(balanceTo.symbol.precision, Decimal.ROUND_DOWN);
+    .times(balanceToNumber);
 
-  const formatted = new Decimal(
-    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
-  ).toFixed(0, Decimal.ROUND_DOWN);
-
-  return new Asset(Number(formatted), balanceTo.symbol);
+  return new Asset(
+    reward
+    .times(Math.pow(10, balanceTo.symbol.precision))
+    .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    balanceTo.symbol
+  );
 }
 
 /**
@@ -93,16 +96,18 @@ export function calculateCost(
   const amountNumber = amountDesired.toDecimal();
   const oneNumber = new Decimal(1);
 
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_UP });
   const reward = balanceFromNumber
     .div(oneNumber.minus(amountNumber.div(balanceToNumber)))
-    .minus(balanceFromNumber)
-    .toFixed(0, Decimal.ROUND_UP);
+    .minus(balanceFromNumber);
 
-  const formatted = new Decimal(
-    Number(reward) * Math.pow(10, balanceTo.symbol.precision)
-  ).toFixed(0, Decimal.ROUND_DOWN);
-
-  return new Asset(Number(formatted), balanceFrom.symbol);
+  return new Asset(
+    reward
+    .times(Math.pow(10, balanceFrom.symbol.precision))
+    .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .toNumber(),
+    balanceFrom.symbol
+  );
 }
 
 /**

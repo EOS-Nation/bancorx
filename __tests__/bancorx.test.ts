@@ -61,7 +61,7 @@ test("calculate Cost will fail if attempting to buy entire reserve or more", () 
   }
 });
 
-test.skip("bancorx.calculateCost - EOS/BNT", () => {
+test("bancorx.calculateCost - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -825,7 +825,7 @@ class BancorCalculator extends AbstractBancorCalculator {
   }
 
   async fetchRelays() {
-    return relays
+    return relays;
   }
 }
 
@@ -840,13 +840,34 @@ test("bancor calculator - estimate return works", async () => {
   );
 });
 
-test.skip("bancor calculator - estimate cost works", async () => {
+test("bancor calculator - estimate cost works", async () => {
   let bancorCalculator = new BancorCalculator();
   expect(
     await bancorCalculator.estimateCost(split(`3.6294 EOSDT`), BTC)
   ).toStrictEqual(split(`4.0000 BTC`));
 
   expect(
-    await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), EOS)
-  ).toStrictEqual(split(`4.5000 EOS`));
+    await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), BTC)
+  ).toStrictEqual(split(`4.0000 BTC`));
+});
+
+test("works with a difference in precision", async () => {
+
+  // Check accuracy 
+
+  // expect(
+  //   bancorx.calculateReturn(
+  //     split("5.0001 EMT"),
+  //     split("1.0000000000 BNT"),
+  //     split("0.9999 EMT")
+  //   )
+  // ).toStrictEqual(split(`0.1666638889 BNT`));
+
+  expect(
+    bancorx.calculateCost(
+      split("5.0001 EMT"),
+      split("1.0000000000 BNT"),
+      split(`0.1666638889 BNT`)
+    )
+  ).toStrictEqual(split(`0.9999 EMT`));
 });
