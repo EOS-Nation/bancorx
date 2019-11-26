@@ -136,6 +136,33 @@ export function calculateReserveToSmart(
   );
 }
 
+export function calculateSmartToReserve(
+  smartTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset,
+  ratio: number = 0.5
+): Asset {
+  const smartTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+  const one = new Decimal(1);
+  const ratioN = one.div(new Decimal(ratio));
+
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+
+  const reward = reserveBalanceN.times(
+    one.minus(Decimal.pow(one.minus(smartTokensN.div(smartSupplyN)), ratioN))
+  );
+
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .toNumber(),
+    reserveBalance.symbol
+  );
+}
+
 /**
  * Compose Memo
  *

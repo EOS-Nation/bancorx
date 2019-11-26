@@ -888,3 +888,15 @@ test("calculate Smart Return works as expected", async() => {
 
   expect(bancorx.calculateReserveToSmart(deposit, blueBalance, smartBalance)).toStrictEqual(split('23.0941 BLURED'))
 })
+
+
+test("calculate smart to reserve", async() => {
+
+  const smartSupply = split('200.0000 BLURED');
+  const sellingTokens = split('32.0000 BLURED');
+  const blueBalance = split('131.0000 BLU');
+  const reserveTokens = split('38.5664 BLU');
+
+  expect(bancorx.calculateSmartToReserve(sellingTokens, blueBalance, smartSupply)).toStrictEqual(reserveTokens);
+
+})
