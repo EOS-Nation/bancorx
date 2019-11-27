@@ -323,7 +323,7 @@ function relayOffersSymbols(symbol1: Symbol, symbol2: Symbol) {
   };
 }
 
-// Opposite of unChopRelays
+// Opposite of ChopRelays
 export function unChopRelays(choppedRelays: ChoppedRelay[], relays: nRelay[]) {
   return choppedRelays.reduce((accum: nRelay[], choppedRelay: ChoppedRelay) => {
     const relayOfInterest = relayOffersSymbols(
