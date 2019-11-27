@@ -52,8 +52,8 @@ export function calculateReturn(
 
   return new Asset(
     reward
-    .times(Math.pow(10, balanceTo.symbol.precision))
-    .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .times(Math.pow(10, balanceTo.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .toNumber(),
     balanceTo.symbol
   );
@@ -105,10 +105,61 @@ export function calculateCost(
 
   return new Asset(
     reward
-    .times(Math.pow(10, balanceFrom.symbol.precision))
-    .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .times(Math.pow(10, balanceFrom.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
       .toNumber(),
     balanceFrom.symbol
+  );
+}
+
+export function calculateReserveToSmart(
+  reserveAmount: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset,
+  ratio: number = 0.5
+): Asset {
+  const smartSupplyN = smartSupply.toDecimal().times(-1);
+  const balanceN = reserveBalance.toDecimal();
+  const depositAmountN = reserveAmount.toDecimal();
+  const one = new Decimal(1);
+
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+  const reward = smartSupplyN.times(
+    one.minus(one.plus(depositAmountN.div(balanceN)).pow(ratio))
+  );
+  return new Asset(
+    reward
+      .times(Math.pow(10, smartSupply.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .toNumber(),
+    smartSupply.symbol
+  );
+}
+
+export function calculateSmartToReserve(
+  smartTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset,
+  ratio: number = 0.5
+): Asset {
+  const smartTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+  const one = new Decimal(1);
+  const ratioN = one.div(new Decimal(ratio));
+
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+
+  const reward = reserveBalanceN.times(
+    one.minus(Decimal.pow(one.minus(smartTokensN.div(smartSupplyN)), ratioN))
+  );
+
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .toNumber(),
+    reserveBalance.symbol
   );
 }
 

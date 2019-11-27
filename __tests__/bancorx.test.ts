@@ -5,6 +5,8 @@ import { nRelay } from "../src/interfaces";
 import { AbstractBancorCalculator } from "../src/AbstractBancorCalculator";
 import wait from "waait";
 
+// https://docs.google.com/spreadsheets/d/1Ke066umKRd5p897X0oNgMhkGzjk2GEDXoWDo21bVJpY/edit?usp=sharing
+
 const trades = [
   [`1.0000 BLU`, `100.0000 BLU`, `100.0000 RED`, `0.9900 RED`],
   [`2.0000 BLU`, `101.0000 BLU`, `99.0100 RED`, `1.9225 RED`],
