@@ -73,6 +73,7 @@ export abstract class AbstractBancorCalculator {
   private hydrateRelay(balances: Asset[], relay: nRelay): HydratedRelay {
     const result = {
       ...relay,
+      fee: 0,
       reserves: relay.reserves.map((reserve: TokenSymbol) => ({
         amount: balances.find(balance =>
           balance.symbol.isEqual(reserve.symbol)

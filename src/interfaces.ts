@@ -81,6 +81,7 @@ export interface HydratedRelay {
   smartToken: TokenSymbol;
   contract: EosAccount;
   isMultiContract: boolean;
+  fee: number;
 }
 
 export interface nRelay {
