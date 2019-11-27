@@ -350,3 +350,24 @@ export function createPath(
   ) as nRelay[];
   return wholeRelaysPath;
 }
+
+export function chargeFee(
+  asset: Asset,
+  decimalFee: number,
+  magnitude: number = 1
+): Asset {
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+  const assetAmount = asset.toDecimal();
+  const one = new Decimal(1);
+  const totalFee = assetAmount.times(
+    one.minus(Decimal.pow(one.minus(decimalFee), magnitude))
+  );
+  const newAmount = assetAmount.minus(totalFee);
+  return new Asset(
+    newAmount
+      .times(Math.pow(10, asset.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+      .toNumber(),
+    asset.symbol
+  );
+}

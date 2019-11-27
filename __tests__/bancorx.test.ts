@@ -53,8 +53,8 @@ test("calculate Cost will fail if attempting to buy entire reserve or more", () 
     expect(e.message).toBe("Impossible to buy the entire reserve or more");
   }
   try {
-    bancorx.calculateReturn(eosAsset, bntAsset, desired)
-  } catch(e) {
+    bancorx.calculateReturn(eosAsset, bntAsset, desired);
+  } catch (e) {
     expect(e.message).toBe("Impossible to buy the entire reserve or more");
   }
 
@@ -856,4 +856,13 @@ test.skip("bancor calculator - estimate cost works", async () => {
   expect(
     await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), BTC)
   ).toStrictEqual(split(`4.0000 BTC`));
+});
+
+test("fee works", () => {
+  expect(bancorx.chargeFee(split("1.0000 EOS"), 0.02, 2)).toStrictEqual(
+    split("0.9604 EOS")
+  );
+  expect(bancorx.chargeFee(split("1.0000 EOS"), 0.02, 1)).toStrictEqual(
+    split("0.9800 EOS")
+  );
 });
