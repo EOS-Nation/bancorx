@@ -947,3 +947,13 @@ test("calculate Fund return works", () => {
     )
   ).toStrictEqual(split("100.0000 BNTEOS"));
 });
+
+test("Crazy tests", () => {
+  expect(
+    bancorx.calculateFundReturn(
+      split('0.1884540589 BNT'),
+      split('1.8468895414 BNT'),
+      split('1495.0000 BNTKRX')
+    )
+  ).toStrictEqual(split('152.5477 BNTKRX'))
+})

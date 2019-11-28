@@ -435,7 +435,35 @@ export function fund(
   );
 }
 
-export function calculateFundReturn(
+export function calculateFundReturnSmall(
+  reserveTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  const wholeGuarantee = new Decimal(Math.pow(10, 10));
+  const reserveTokensN = reserveTokens.toDecimal().times(wholeGuarantee);
+  const reserveBalanceN = reserveBalance.toDecimal().times(wholeGuarantee);
+  const smartSupplyN = smartSupply.toDecimal().times(wholeGuarantee);
+  const one = new Decimal(1);
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+
+  const reward = reserveTokensN
+    .times(smartSupplyN)
+    .minus(smartSupplyN)
+    .plus(one)
+    .div(reserveBalanceN);
+
+  return new Asset(
+    reward
+      .div(wholeGuarantee)
+      .times(Math.pow(10, smartSupply.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    smartSupply.symbol
+  );
+}
+
+export function calculateFundReturnBig(
   reserveTokens: Asset,
   reserveBalance: Asset,
   smartSupply: Asset
@@ -444,6 +472,7 @@ export function calculateFundReturn(
   const reserveBalanceN = reserveBalance.toDecimal();
   const smartSupplyN = smartSupply.toDecimal();
   const one = new Decimal(1);
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
 
   const reward = reserveTokensN
     .times(smartSupplyN)
@@ -458,4 +487,14 @@ export function calculateFundReturn(
       .toNumber(),
     smartSupply.symbol
   );
+}
+
+export function calculateFundReturn(
+  reserveTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  return reserveTokens.toDecimal().greaterThanOrEqualTo(1)
+    ? calculateFundReturnBig(reserveTokens, reserveBalance, smartSupply)
+    : calculateFundReturnSmall(reserveTokens, reserveBalance, smartSupply);
 }
