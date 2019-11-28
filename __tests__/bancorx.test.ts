@@ -890,7 +890,7 @@ test("calculate Smart Return works as expected", async() => {
 })
 
 
-test("calculate smart to reserve", async() => {
+test.only("calculate smart to reserve", async() => {
 
   const smartSupply = split('200.0000 BLURED');
   const sellingTokens = split('32.0000 BLURED');
@@ -900,3 +900,21 @@ test("calculate smart to reserve", async() => {
   expect(bancorx.calculateSmartToReserve(sellingTokens, blueBalance, smartSupply)).toStrictEqual(reserveTokens);
 
 })
+
+test.only("more smart to reserve", async() => {
+  const smartSupply = split('1000.0000 EOSBTC');
+  const btcBalance = split('0.6500 BTC')
+  const eosBalance = split('20.0000 BTC');
+
+  expect(bancorx.calculateSmartToReserve(smartSupply, btcBalance, smartSupply)).toStrictEqual(btcBalance);
+})
+
+test.only("liquidate works", () => {
+  // I
+  expect(bancorx.liquidate(split('100.0000 BNTEOS'), split('2.0000 EOS'), split('200.0000 BNTEOS'))).toStrictEqual(split('1.0000 EOS'))
+})
+
+test.only("fund works", () => {
+  // If you want 100 smart tokens and the EOS balance is 2 with a smartSupply of 200 it's going to cost you almost 2 EOS.
+  expect(bancorx.fund(split('100.0000 BNTEOS'), split("2.0000 EOS"), split("200.0000 BNTEOS"))).toStrictEqual(split('1.9950 EOS'))
+});

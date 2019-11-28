@@ -163,6 +163,40 @@ export function calculateSmartToReserve(
   );
 }
 
+export function liquidate(smartTokens: Asset, reserveBalance: Asset, smartSupply: Asset) {
+  const smartTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+
+  const reward = smartTokensN.times(reserveBalanceN).div(smartSupplyN);
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+      reserveBalance.symbol
+  )
+}
+
+export function fund(smartTokens: Asset, reserveBalance: Asset, smartSupply: Asset) {
+  const smartTokensN = smartTokens.toDecimal()
+  const reserveBalanceN = reserveBalance.toDecimal()
+  const smartSupplyN = smartSupply.toDecimal()
+  const one = new Decimal(1);
+  // (smart_amount * balance - 1) / current_smart_supply + 1;
+  const reward = smartTokensN.times(reserveBalanceN).minus(one).div(smartSupplyN).plus(one)
+  
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+      reserveBalance.symbol
+  )
+
+  // returning the reserve tokens
+}
+
 /**
  * Compose Memo
  *
