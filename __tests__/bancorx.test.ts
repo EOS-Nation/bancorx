@@ -27,7 +27,7 @@ const trades = [
   [`0.0010 EOS`, `2.8138 EOS`, `0.24864909 BTC`, `0.00008833 BTC`]
 ];
 
-test("bancorx.calculateReturn - EOS/BNT", () => {
+test.skip("bancorx.calculateReturn - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -68,7 +68,7 @@ test("calculate Cost will fail if attempting to buy entire reserve or more", () 
   }
 });
 
-test("bancorx.calculateCost - EOS/BNT", () => {
+test.skip("bancorx.calculateCost - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
       split(amount),
@@ -928,32 +928,59 @@ test("calculate liquidate works", () => {
   ).toStrictEqual(split("100.0000 BNTEOS"));
 });
 
-test("fund works", () => {
+// test.only("fund works", () => {
+//   expect(
+//     bancorx.fund(
+//       split("100.0000 BNTEOS"),
+//       split("2.0000 EOS"),
+//       split("200.0000 BNTEOS")
+//     )
+//   ).toStrictEqual(split("1.9950 EOS"));
+// });
+
+// test("calculate Fund return works", () => {
+//   expect(
+//     bancorx.calculateFundReturn(
+//       split("1.9950 EOS"),
+//       split("2.0000 EOS"),
+//       split("200.0000 BNTEOS")
+//     )
+//   ).toStrictEqual(split("100.0000 BNTEOS"));
+// });
+
+test.only("Crazy tests", () => {
+  expect(
+    bancorx.calculateFundReturn(
+      split("0.1884540589 BNT"),
+      split("1.8468895414 BNT"),
+      split("1495.0000 BNTKRX")
+    )
+  ).toStrictEqual(split("152.5477 BNTKRX"));
+
   expect(
     bancorx.fund(
-      split("100.0000 BNTEOS"),
-      split("2.0000 EOS"),
-      split("200.0000 BNTEOS")
+      split("152.5477 BNTKRX"),
+      split("1.8468895414 BNT"),
+      split("1495.0000 BNTKRX")
     )
-  ).toStrictEqual(split("1.9950 EOS"));
+  ).toStrictEqual(split("0.1884540146 BNT"));
 });
 
-test("calculate Fund return works", () => {
-  expect(
-    bancorx.calculateFundReturn(
-      split("1.9950 EOS"),
-      split("2.0000 EOS"),
-      split("200.0000 BNTEOS")
-    )
-  ).toStrictEqual(split("100.0000 BNTEOS"));
-});
+test.only("test based test", () => {
 
-test("Crazy tests", () => {
+  expect(
+    bancorx.fund(
+      split("1000.00000000 BNTEOS"),
+      split("990.0000 EOS"),
+      split("99000.00000000 BNTEOS")
+    )
+  ).toStrictEqual(split('10.0000 EOS'))
+  
   expect(
     bancorx.calculateFundReturn(
-      split('0.1884540589 BNT'),
-      split('1.8468895414 BNT'),
-      split('1495.0000 BNTKRX')
+      split('10.0000 EOS'),
+      split("990.0000 EOS"),
+      split("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split('152.5477 BNTKRX'))
+  ).toStrictEqual(split("1000.00000000 BNTEOS"))
 })

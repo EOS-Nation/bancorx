@@ -6,6 +6,8 @@ export { AbstractBancorCalculator } from "./AbstractBancorCalculator";
 import Decimal from "decimal.js";
 import _ from "underscore";
 
+Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+
 /**
  * Bancor Formula
  *
@@ -410,82 +412,34 @@ export function calculateLiquidateCost(
   );
 }
 
+const bigNumber = Decimal.pow(10, 10);
+
+// Returns what user can expect to be charged in order to buy X amount of smart tokens
 export function fund(
   smartTokens: Asset,
   reserveBalance: Asset,
   smartSupply: Asset
 ) {
-  const reserveTokensN = smartTokens.toDecimal();
-  const reserveBalanceN = reserveBalance.toDecimal();
-  const smartSupplyN = smartSupply.toDecimal();
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+  const smartTokensN = smartTokens.toDecimal().times(bigNumber);
+  const reserveBalanceN = reserveBalance.toDecimal().times(bigNumber);
+  const smartSupplyN = smartSupply.toDecimal().times(bigNumber);
   const one = new Decimal(1);
+
   // (smart_amount * balance - 1) / current_smart_supply + 1;
-  const reward = reserveTokensN
+  const cost = smartTokensN
     .times(reserveBalanceN)
     .minus(one)
     .div(smartSupplyN)
     .plus(one);
 
   return new Asset(
-    reward
+    cost
       .times(Math.pow(10, reserveBalance.symbol.precision))
+      .div(bigNumber)
       .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .toNumber(),
     reserveBalance.symbol
-  );
-}
-
-export function calculateFundReturnSmall(
-  reserveTokens: Asset,
-  reserveBalance: Asset,
-  smartSupply: Asset
-) {
-  const wholeGuarantee = new Decimal(Math.pow(10, 10));
-  const reserveTokensN = reserveTokens.toDecimal().times(wholeGuarantee);
-  const reserveBalanceN = reserveBalance.toDecimal().times(wholeGuarantee);
-  const smartSupplyN = smartSupply.toDecimal().times(wholeGuarantee);
-  const one = new Decimal(1);
-  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
-
-  const reward = reserveTokensN
-    .times(smartSupplyN)
-    .minus(smartSupplyN)
-    .plus(one)
-    .div(reserveBalanceN);
-
-  return new Asset(
-    reward
-      .div(wholeGuarantee)
-      .times(Math.pow(10, smartSupply.symbol.precision))
-      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
-      .toNumber(),
-    smartSupply.symbol
-  );
-}
-
-export function calculateFundReturnBig(
-  reserveTokens: Asset,
-  reserveBalance: Asset,
-  smartSupply: Asset
-) {
-  const reserveTokensN = reserveTokens.toDecimal();
-  const reserveBalanceN = reserveBalance.toDecimal();
-  const smartSupplyN = smartSupply.toDecimal();
-  const one = new Decimal(1);
-  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
-
-  const reward = reserveTokensN
-    .times(smartSupplyN)
-    .minus(smartSupplyN)
-    .plus(one)
-    .div(reserveBalanceN);
-
-  return new Asset(
-    reward
-      .times(Math.pow(10, smartSupply.symbol.precision))
-      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
-      .toNumber(),
-    smartSupply.symbol
   );
 }
 
@@ -494,7 +448,25 @@ export function calculateFundReturn(
   reserveBalance: Asset,
   smartSupply: Asset
 ) {
-  return reserveTokens.toDecimal().greaterThanOrEqualTo(1)
-    ? calculateFundReturnBig(reserveTokens, reserveBalance, smartSupply)
-    : calculateFundReturnSmall(reserveTokens, reserveBalance, smartSupply);
+  Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
+  const reserveTokensN = reserveTokens.toDecimal().times(bigNumber);
+  const reserveBalanceN = reserveBalance.toDecimal().times(bigNumber);
+  const smartSupplyN = smartSupply.toDecimal().times(bigNumber);
+  const one = new Decimal(1);
+
+  // y(s+1) + 1 / r
+
+  const reward = reserveTokensN
+    .times(smartSupplyN.plus(one))
+    .plus(one)
+    .div(reserveBalanceN);
+
+  return new Asset(
+    reward
+      .times(Math.pow(10, smartSupply.symbol.precision))
+      .div(bigNumber)
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    smartSupply.symbol
+  );
 }
