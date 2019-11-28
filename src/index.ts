@@ -142,7 +142,7 @@ export function calculateSmartToReserve(
   smartSupply: Asset,
   ratio: number = 0.5
 ): Asset {
-  const smartTokensN = smartTokens.toDecimal();
+  const reserveTokensN = smartTokens.toDecimal();
   const reserveBalanceN = reserveBalance.toDecimal();
   const smartSupplyN = smartSupply.toDecimal();
   const one = new Decimal(1);
@@ -151,7 +151,7 @@ export function calculateSmartToReserve(
   Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
 
   const reward = reserveBalanceN.times(
-    one.minus(Decimal.pow(one.minus(smartTokensN.div(smartSupplyN)), ratioN))
+    one.minus(Decimal.pow(one.minus(reserveTokensN.div(smartSupplyN)), ratioN))
   );
 
   return new Asset(
@@ -369,5 +369,93 @@ export function chargeFee(
       .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
       .toNumber(),
     asset.symbol
+  );
+}
+
+export function liquidate(
+  smartTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  const smartTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+
+  const reward = smartTokensN.times(reserveBalanceN).div(smartSupplyN);
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    reserveBalance.symbol
+  );
+}
+
+export function calculateLiquidateCost(
+  reserveTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  const reserveTokensN = reserveTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+
+  const reward = reserveTokensN.times(smartSupplyN).div(reserveBalanceN);
+  return new Asset(
+    reward
+      .times(Math.pow(10, smartSupply.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    smartSupply.symbol
+  );
+}
+
+export function fund(
+  smartTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  const reserveTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+  const one = new Decimal(1);
+  // (smart_amount * balance - 1) / current_smart_supply + 1;
+  const reward = reserveTokensN
+    .times(reserveBalanceN)
+    .minus(one)
+    .div(smartSupplyN)
+    .plus(one);
+
+  return new Asset(
+    reward
+      .times(Math.pow(10, reserveBalance.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    reserveBalance.symbol
+  );
+}
+
+export function calculateFundReturn(
+  reserveTokens: Asset,
+  reserveBalance: Asset,
+  smartSupply: Asset
+) {
+  const reserveTokensN = reserveTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
+  const one = new Decimal(1);
+
+  const reward = reserveTokensN
+    .times(smartSupplyN)
+    .minus(smartSupplyN)
+    .plus(one)
+    .div(reserveBalanceN);
+
+  return new Asset(
+    reward
+      .times(Math.pow(10, smartSupply.symbol.precision))
+      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+      .toNumber(),
+    smartSupply.symbol
   );
 }

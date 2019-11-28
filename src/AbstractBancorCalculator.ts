@@ -10,7 +10,6 @@ import {
 } from "./interfaces";
 
 export abstract class AbstractBancorCalculator {
-
   public async estimateCost(
     amountDesired: Asset,
     from: Symbol

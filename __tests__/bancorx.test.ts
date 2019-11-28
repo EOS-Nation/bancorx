@@ -866,3 +866,84 @@ test("fee works", () => {
     split("0.9800 EOS")
   );
 });
+
+test("works with a difference in precision", async () => {
+  expect(
+    bancorx.calculateCost(
+      split("5.0001 EMT"),
+      split("1.0000000000 BNT"),
+      split(`0.1666638889 BNT`)
+    )
+  ).toStrictEqual(split(`0.9999 EMT`));
+});
+
+test("calculate Smart Return works as expected", async () => {
+  const deposit = split(`32.0000 BLU`);
+  const blueBalance = split("131.0000 BLU");
+  const smartBalance = split("200.0000 BLURED");
+
+  expect(
+    bancorx.calculateReserveToSmart(deposit, blueBalance, smartBalance)
+  ).toStrictEqual(split("23.0941 BLURED"));
+});
+
+test("calculate smart to reserve", async () => {
+  const smartSupply = split("200.0000 BLURED");
+  const sellingTokens = split("32.0000 BLURED");
+  const blueBalance = split("131.0000 BLU");
+  const reserveTokens = split("38.5664 BLU");
+
+  expect(
+    bancorx.calculateSmartToReserve(sellingTokens, blueBalance, smartSupply)
+  ).toStrictEqual(reserveTokens);
+});
+
+test("more smart to reserve", async () => {
+  const smartSupply = split("1000.0000 EOSBTC");
+  const btcBalance = split("0.6500 BTC");
+  const eosBalance = split("20.0000 BTC");
+
+  expect(
+    bancorx.calculateSmartToReserve(smartSupply, btcBalance, smartSupply)
+  ).toStrictEqual(btcBalance);
+});
+
+test("liquidate works", () => {
+  expect(
+    bancorx.liquidate(
+      split("100.0000 BNTEOS"),
+      split("2.0000 EOS"),
+      split("200.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("1.0000 EOS"));
+});
+
+test("calculate liquidate works", () => {
+  expect(
+    bancorx.calculateLiquidateCost(
+      split("1.0000 EOS"),
+      split("2.0000 EOS"),
+      split("200.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("100.0000 BNTEOS"));
+});
+
+test("fund works", () => {
+  expect(
+    bancorx.fund(
+      split("100.0000 BNTEOS"),
+      split("2.0000 EOS"),
+      split("200.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("1.9950 EOS"));
+});
+
+test("calculate Fund return works", () => {
+  expect(
+    bancorx.calculateFundReturn(
+      split("1.9950 EOS"),
+      split("2.0000 EOS"),
+      split("200.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("100.0000 BNTEOS"));
+});
