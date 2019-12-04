@@ -928,27 +928,7 @@ test("calculate liquidate works", () => {
   ).toStrictEqual(split("100.0000 BNTEOS"));
 });
 
-// test.only("fund works", () => {
-//   expect(
-//     bancorx.fund(
-//       split("100.0000 BNTEOS"),
-//       split("2.0000 EOS"),
-//       split("200.0000 BNTEOS")
-//     )
-//   ).toStrictEqual(split("1.9950 EOS"));
-// });
-
-// test("calculate Fund return works", () => {
-//   expect(
-//     bancorx.calculateFundReturn(
-//       split("1.9950 EOS"),
-//       split("2.0000 EOS"),
-//       split("200.0000 BNTEOS")
-//     )
-//   ).toStrictEqual(split("100.0000 BNTEOS"));
-// });
-
-test.only("Crazy tests", () => {
+test("random fund tests", () => {
   expect(
     bancorx.calculateFundReturn(
       split("0.1884540589 BNT"),
@@ -963,10 +943,7 @@ test.only("Crazy tests", () => {
       split("1.8468895414 BNT"),
       split("1495.0000 BNTKRX")
     )
-  ).toStrictEqual(split("0.1884540146 BNT"));
-});
-
-test.only("test based test", () => {
+  ).toStrictEqual(split("0.1884540145 BNT"));
 
   expect(
     bancorx.fund(
@@ -974,13 +951,61 @@ test.only("test based test", () => {
       split("990.0000 EOS"),
       split("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split('10.0000 EOS'))
-  
+  ).toStrictEqual(split("9.9999 EOS"));
+
   expect(
     bancorx.calculateFundReturn(
-      split('10.0000 EOS'),
+      split("10.0000 EOS"),
       split("990.0000 EOS"),
       split("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("1000.00000000 BNTEOS"))
-})
+  ).toStrictEqual(split("1000.00000000 BNTEOS"));
+
+  expect(
+    bancorx.fund(
+      split("1000.00000000 BNTEOS"),
+      split("990.00000000 BNT"),
+      split("99000.00000000 BNTEOS")
+    )
+  ).toStrictEqual(split("9.99999999 BNT"));
+
+  expect(
+    bancorx.fund(
+      split("2000.00000000 BNTEOS"),
+      split("990.00000000 BNT"),
+      split("99000.00000000 BNTEOS")
+    )
+  ).toStrictEqual(split("19.99999999 BNT"));
+
+  expect(
+    bancorx.fund(
+      split("250.0000 BNTEOS"),
+      split("6.0000 EOS"),
+      split("1000.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("1.5000 EOS"));
+
+  expect(
+    bancorx.fund(
+      split("250.0000 BNTEOS"),
+      split("7.5000 EOS"),
+      split("1250.0000 BNTEOS")
+    )
+  ).toStrictEqual(split("1.5000 EOS"));
+
+  expect(
+    bancorx.fund(
+      split("148.50000000 BNTEOS"),
+      split("990.0000 EOS"),
+      split("99000.00000000 BNTEOS")
+    )
+  ).toStrictEqual(split("1.4850 EOS"));
+
+  expect(
+    bancorx.fund(
+      split("657.94500123 BNTEOS"),
+      split("991.4850 EOS"),
+      split("99148.50000000 BNTEOS")
+    )
+  ).toStrictEqual(split("6.5794 EOS"));
+});

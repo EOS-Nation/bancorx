@@ -1,5 +1,5 @@
 import { Converter, nRelay, TokenSymbol, ChoppedRelay } from "./interfaces";
-import { Asset, Symbol } from "eos-common";
+import { Asset, Symbol, split } from "eos-common";
 export { relays } from "./Relays";
 export * from "./interfaces";
 export { AbstractBancorCalculator } from "./AbstractBancorCalculator";
@@ -414,29 +414,21 @@ export function calculateLiquidateCost(
 
 const bigNumber = Decimal.pow(10, 10);
 
-// Returns what user can expect to be charged in order to buy X amount of smart tokens
 export function fund(
   smartTokens: Asset,
   reserveBalance: Asset,
   smartSupply: Asset
 ) {
   Decimal.set({ precision: 15, rounding: Decimal.ROUND_DOWN });
-  const smartTokensN = smartTokens.toDecimal().times(bigNumber);
-  const reserveBalanceN = reserveBalance.toDecimal().times(bigNumber);
-  const smartSupplyN = smartSupply.toDecimal().times(bigNumber);
-  const one = new Decimal(1);
+  const smartTokensN = smartTokens.toDecimal();
+  const reserveBalanceN = reserveBalance.toDecimal();
+  const smartSupplyN = smartSupply.toDecimal();
 
-  // (smart_amount * balance - 1) / current_smart_supply + 1;
-  const cost = smartTokensN
-    .times(reserveBalanceN)
-    .minus(one)
-    .div(smartSupplyN)
-    .plus(one);
-
+  const cost = smartTokensN.div(smartSupplyN).times(reserveBalanceN);
+  
   return new Asset(
     cost
       .times(Math.pow(10, reserveBalance.symbol.precision))
-      .div(bigNumber)
       .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .toNumber(),
     reserveBalance.symbol
