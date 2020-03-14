@@ -15,5 +15,5 @@
         "esModuleInterop": true,
         "outDir": "build"
     },
-    "include": ["src"]
+    "include": ["index.ts"]
 }

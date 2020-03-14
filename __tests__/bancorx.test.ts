@@ -1,6 +1,6 @@
-import * as bancorx from "../src";
+import * as bancorx from "..";
 import _ from "underscore";
-import { split, Symbol } from "eos-common";
+import { asset, symbol } from "eos-common";
 import { nRelay } from "../src/interfaces";
 import { AbstractBancorCalculator } from "../src/AbstractBancorCalculator";
 import wait from "waait";
@@ -30,10 +30,10 @@ const trades = [
 test.skip("bancorx.calculateReturn - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
-      split(amount),
-      split(bluBalance),
-      split(redBalance),
-      split(reward)
+      asset(amount),
+      asset(bluBalance),
+      asset(redBalance),
+      asset(reward)
     ])
     .forEach(([amount, blueBalance, redBalance, reward]) => {
       expect(bancorx.calculateReturn(blueBalance, redBalance, amount)).toEqual(
@@ -44,9 +44,9 @@ test.skip("bancorx.calculateReturn - EOS/BNT", () => {
 
 test("calculate Cost will fail if attempting to buy entire reserve or more", () => {
   expect.assertions(3);
-  const bntAsset = split("10.1000000000 BNT");
-  const eosAsset = split("1.0000 EOS");
-  const desired = split("1.0000 EOS");
+  const bntAsset = asset("10.1000000000 BNT");
+  const eosAsset = asset("1.0000 EOS");
+  const desired = asset("1.0000 EOS");
   try {
     bancorx.calculateCost(bntAsset, eosAsset, desired);
   } catch (e) {
@@ -58,9 +58,9 @@ test("calculate Cost will fail if attempting to buy entire reserve or more", () 
     expect(e.message).toBe("Impossible to buy the entire reserve or more");
   }
 
-  const bntAsset2 = split("10.1000000000 BNT");
-  const eosAsset2 = split("1.0000 EOS");
-  const desired2 = split("1.1000 EOS");
+  const bntAsset2 = asset("10.1000000000 BNT");
+  const eosAsset2 = asset("1.0000 EOS");
+  const desired2 = asset("1.1000 EOS");
   try {
     bancorx.calculateCost(bntAsset2, eosAsset2, desired2);
   } catch (e) {
@@ -71,10 +71,10 @@ test("calculate Cost will fail if attempting to buy entire reserve or more", () 
 test.skip("bancorx.calculateCost - EOS/BNT", () => {
   trades
     .map(([amount, bluBalance, redBalance, reward]) => [
-      split(amount),
-      split(bluBalance),
-      split(redBalance),
-      split(reward)
+      asset(amount),
+      asset(bluBalance),
+      asset(redBalance),
+      asset(reward)
     ])
     .forEach(([amount, blueBalance, redBalance, reward]) => {
       expect(bancorx.calculateCost(blueBalance, redBalance, reward)).toEqual(
@@ -104,12 +104,12 @@ test("bancorx.composeMemo", () => {
   ).toBe("1,bnt2eoscnvrt BNT bancorc11144 CUSD,3.17,<account>");
 });
 
-const EOS: Symbol = new Symbol("EOS", 4);
-const BNT: Symbol = new Symbol("BNT", 4);
-const EOSDT: Symbol = new Symbol("EOSDT", 4);
-const BTC: Symbol = new Symbol("BTC", 4);
-const CAT: Symbol = new Symbol("CAT", 4);
-const DOG: Symbol = new Symbol("DOG", 4);
+const EOS: Symbol = symbol("EOS", 4);
+const BNT: Symbol = symbol("BNT", 4);
+const EOSDT: Symbol = symbol("EOSDT", 4);
+const BTC: Symbol = symbol("BTC", 4);
+const CAT: Symbol = symbol("CAT", 4);
+const DOG: Symbol = symbol("DOG", 4);
 
 const EOSDTandBTC: nRelay = {
   reserves: [
@@ -124,7 +124,7 @@ const EOSDTandBTC: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BTCDT", 4)
+    symbol: symbol("BTCDT", 4)
   },
   contract: "rockup.xyz",
   isMultiContract: false
@@ -143,7 +143,7 @@ const BTCandDOG: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BTCDOG", 4)
+    symbol: symbol("BTCDOG", 4)
   },
   contract: "rockup.zxc",
   isMultiContract: true
@@ -162,7 +162,7 @@ const EOSandBNT: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BNTEOS", 4)
+    symbol: symbol("BNTEOS", 4)
   },
   contract: "rockup.xz",
   isMultiContract: false
@@ -181,7 +181,7 @@ const BNTandEOSDT: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BNTDT", 4)
+    symbol: symbol("BNTDT", 4)
   },
   contract: "zomglol",
   isMultiContract: false
@@ -201,7 +201,7 @@ const CATandEOSDT: nRelay = {
   ],
   smartToken: {
     contract: "labelaarbaro",
-    symbol: new Symbol("BNTCAT", 4)
+    symbol: symbol("BNTCAT", 4)
   },
   contract: "fwefwef",
   isMultiContract: false
@@ -234,7 +234,7 @@ test("createPath works", () => {
 
   expect(bancorx.createPath(CAT, EOSDT, relays)).toEqual([CATandEOSDT]);
 
-  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+  expect(bancorx.createPath(symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
     CATandEOSDT
   ]);
 });
@@ -249,11 +249,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTDT", 4)
+          symbol: symbol("BNTDT", 4)
         }
       ]
     },
@@ -262,11 +262,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "bntbntbnt",
-          symbol: new Symbol("BNT", 4)
+          symbol: symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTDT", 4)
+          symbol: symbol("BNTDT", 4)
         }
       ]
     },
@@ -275,11 +275,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "eosio.token",
-          symbol: new Symbol("EOS", 4)
+          symbol: symbol("EOS", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTEOS", 4)
+          symbol: symbol("BNTEOS", 4)
         }
       ]
     },
@@ -288,11 +288,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "bntbntbntbnt",
-          symbol: new Symbol("BNT", 4)
+          symbol: symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTEOS", 4)
+          symbol: symbol("BNTEOS", 4)
         }
       ]
     },
@@ -301,11 +301,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "sdasd",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDT", 4)
+          symbol: symbol("BTCDT", 4)
         }
       ]
     },
@@ -314,11 +314,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTC", 4)
+          symbol: symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDT", 4)
+          symbol: symbol("BTCDT", 4)
         }
       ]
     },
@@ -327,11 +327,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTCAT", 4)
+          symbol: symbol("BNTCAT", 4)
         }
       ]
     },
@@ -340,11 +340,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "catcat",
-          symbol: new Symbol("CAT", 4)
+          symbol: symbol("CAT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTCAT", 4)
+          symbol: symbol("BNTCAT", 4)
         }
       ]
     },
@@ -353,11 +353,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "dwe",
-          symbol: new Symbol("BTC", 4)
+          symbol: symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDOG", 4)
+          symbol: symbol("BTCDOG", 4)
         }
       ]
     },
@@ -366,11 +366,11 @@ test("can chop relays", () => {
       reserves: [
         {
           contract: "fwet",
-          symbol: new Symbol("DOG", 4)
+          symbol: symbol("DOG", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDOG", 4)
+          symbol: symbol("BTCDOG", 4)
         }
       ]
     }
@@ -391,7 +391,7 @@ test("can chop relay", () => {
     ],
     smartToken: {
       contract: "labelaarbaro",
-      symbol: new Symbol("BNTEOS", 4)
+      symbol: symbol("BNTEOS", 4)
     },
     contract: "rockup.xz",
     isMultiContract: false
@@ -409,7 +409,7 @@ test("can chop relay", () => {
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTEOS", 4)
+          symbol: symbol("BNTEOS", 4)
         }
       ]
     },
@@ -422,7 +422,7 @@ test("can chop relay", () => {
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTEOS", 4)
+          symbol: symbol("BNTEOS", 4)
         }
       ]
     }
@@ -443,7 +443,7 @@ test("remove chopped relay", () => {
     ],
     smartToken: {
       contract: "labelaarbaro",
-      symbol: new Symbol("BNTEOS", 4)
+      symbol: symbol("BNTEOS", 4)
     },
     contract: "rockup.xz",
     isMultiContract: false
@@ -459,11 +459,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "eosdt",
-              symbol: new Symbol("EOSDT", 4)
+              symbol: symbol("EOSDT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTDT", 4)
+              symbol: symbol("BNTDT", 4)
             }
           ]
         },
@@ -472,11 +472,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "bntbntbnt",
-              symbol: new Symbol("BNT", 4)
+              symbol: symbol("BNT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTDT", 4)
+              symbol: symbol("BNTDT", 4)
             }
           ]
         },
@@ -485,11 +485,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "eosio.token",
-              symbol: new Symbol("EOS", 4)
+              symbol: symbol("EOS", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTEOS", 4)
+              symbol: symbol("BNTEOS", 4)
             }
           ]
         },
@@ -498,11 +498,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "bntbntbntbnt",
-              symbol: new Symbol("BNT", 4)
+              symbol: symbol("BNT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTEOS", 4)
+              symbol: symbol("BNTEOS", 4)
             }
           ]
         },
@@ -511,11 +511,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "sdasd",
-              symbol: new Symbol("EOSDT", 4)
+              symbol: symbol("EOSDT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BTCDT", 4)
+              symbol: symbol("BTCDT", 4)
             }
           ]
         },
@@ -524,11 +524,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BTC", 4)
+              symbol: symbol("BTC", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BTCDT", 4)
+              symbol: symbol("BTCDT", 4)
             }
           ]
         },
@@ -537,11 +537,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "eosdt",
-              symbol: new Symbol("EOSDT", 4)
+              symbol: symbol("EOSDT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTCAT", 4)
+              symbol: symbol("BNTCAT", 4)
             }
           ]
         },
@@ -550,11 +550,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "catcat",
-              symbol: new Symbol("CAT", 4)
+              symbol: symbol("CAT", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BNTCAT", 4)
+              symbol: symbol("BNTCAT", 4)
             }
           ]
         },
@@ -563,11 +563,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "dwe",
-              symbol: new Symbol("BTC", 4)
+              symbol: symbol("BTC", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BTCDOG", 4)
+              symbol: symbol("BTCDOG", 4)
             }
           ]
         },
@@ -576,11 +576,11 @@ test("remove chopped relay", () => {
           reserves: [
             {
               contract: "fwet",
-              symbol: new Symbol("DOG", 4)
+              symbol: symbol("DOG", 4)
             },
             {
               contract: "labelaarbaro",
-              symbol: new Symbol("BTCDOG", 4)
+              symbol: symbol("BTCDOG", 4)
             }
           ]
         }
@@ -593,11 +593,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTDT", 4)
+          symbol: symbol("BNTDT", 4)
         }
       ]
     },
@@ -606,11 +606,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "bntbntbnt",
-          symbol: new Symbol("BNT", 4)
+          symbol: symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTDT", 4)
+          symbol: symbol("BNTDT", 4)
         }
       ]
     },
@@ -619,11 +619,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "bntbntbntbnt",
-          symbol: new Symbol("BNT", 4)
+          symbol: symbol("BNT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTEOS", 4)
+          symbol: symbol("BNTEOS", 4)
         }
       ]
     },
@@ -632,11 +632,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "sdasd",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDT", 4)
+          symbol: symbol("BTCDT", 4)
         }
       ]
     },
@@ -645,11 +645,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTC", 4)
+          symbol: symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDT", 4)
+          symbol: symbol("BTCDT", 4)
         }
       ]
     },
@@ -658,11 +658,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "eosdt",
-          symbol: new Symbol("EOSDT", 4)
+          symbol: symbol("EOSDT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTCAT", 4)
+          symbol: symbol("BNTCAT", 4)
         }
       ]
     },
@@ -671,11 +671,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "catcat",
-          symbol: new Symbol("CAT", 4)
+          symbol: symbol("CAT", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BNTCAT", 4)
+          symbol: symbol("BNTCAT", 4)
         }
       ]
     },
@@ -684,11 +684,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "dwe",
-          symbol: new Symbol("BTC", 4)
+          symbol: symbol("BTC", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDOG", 4)
+          symbol: symbol("BTCDOG", 4)
         }
       ]
     },
@@ -697,11 +697,11 @@ test("remove chopped relay", () => {
       reserves: [
         {
           contract: "fwet",
-          symbol: new Symbol("DOG", 4)
+          symbol: symbol("DOG", 4)
         },
         {
           contract: "labelaarbaro",
-          symbol: new Symbol("BTCDOG", 4)
+          symbol: symbol("BTCDOG", 4)
         }
       ]
     }
@@ -722,7 +722,7 @@ test("can get oppositeSymbol", () => {
     ],
     smartToken: {
       contract: "labelaarbaro",
-      symbol: new Symbol("BNTEOS", 4)
+      symbol: symbol("BNTEOS", 4)
     },
     contract: "rockup.xz",
     isMultiContract: false
@@ -730,7 +730,7 @@ test("can get oppositeSymbol", () => {
 
   const choppedRelay = bancorx.chopRelay(EOSandBNT)[0];
   const res = bancorx.getOppositeSymbol(choppedRelay, EOS);
-  expect(res).toEqual(new Symbol("BNTEOS", 4));
+  expect(res).toEqual(symbol("BNTEOS", 4));
 });
 
 test("relay has both symbols", () => {
@@ -747,7 +747,7 @@ test("relay has both symbols", () => {
     ],
     smartToken: {
       contract: "labelaarbaro",
-      symbol: new Symbol("BNTEOS", 4)
+      symbol: symbol("BNTEOS", 4)
     },
     contract: "rockup.xz",
     isMultiContract: false
@@ -755,16 +755,16 @@ test("relay has both symbols", () => {
 
   const choppedRelay = bancorx.chopRelay(EOSandBNT)[0];
 
-  let func = bancorx.relayHasBothSymbols(EOS, new Symbol("BNTEOS", 4));
+  let func = bancorx.relayHasBothSymbols(EOS, symbol("BNTEOS", 4));
 
   expect(func(choppedRelay)).toBe(true);
 
-  func = bancorx.relayHasBothSymbols(EOS, new Symbol("BNTBNT", 4));
+  func = bancorx.relayHasBothSymbols(EOS, symbol("BNTBNT", 4));
   expect(func(choppedRelay)).toBe(false);
 });
 
 test("createPath works with symbols", async () => {
-  expect(bancorx.createPath(new Symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
+  expect(bancorx.createPath(symbol("BNTCAT", 4), EOSDT, relays)).toEqual([
     CATandEOSDT
   ]);
 
@@ -802,22 +802,22 @@ test("compose memo works with multicontracts", () => {
 const myRelays = [
   {
     contractName: "rockup.xz",
-    reserves: [split(`2.0000 EOS`), split(`5.0000 BNT`)]
+    reserves: [asset(`2.0000 EOS`), asset(`5.0000 BNT`)]
   },
   {
     contractName: `zomglol`,
-    reserves: [split(`2.5000 BNT`), split(`6.0000 EOSDT`)]
+    reserves: [asset(`2.5000 BNT`), asset(`6.0000 EOSDT`)]
   },
   {
     contractName: "rockup.xyz",
-    reserves: [split(`103.0000 BTC`), split(`97.0875 EOSDT`)]
+    reserves: [asset(`103.0000 BTC`), asset(`97.0875 EOSDT`)]
   }
 ];
 
 class BancorCalculator extends AbstractBancorCalculator {
   async fetchMultiRelayReserves(contractName: string, symbolCode: string) {
     await wait();
-    return [split(`1.0000 EOS`), split(`10.1000000000 BNT`)];
+    return [asset(`1.0000 EOS`), asset(`10.1000000000 BNT`)];
   }
 
   async fetchSingleRelayReserves(contractName: string) {
@@ -828,7 +828,7 @@ class BancorCalculator extends AbstractBancorCalculator {
 
   async fetchSmartTokenSupply(contractName: string, symbolCode: string) {
     await wait();
-    return split(`1.0000 EOS`);
+    return asset(`1.0000 EOS`);
   }
 
   async fetchRelays() {
@@ -838,60 +838,60 @@ class BancorCalculator extends AbstractBancorCalculator {
 
 test.skip("bancor calculator - estimate return works", async () => {
   const x = new BancorCalculator();
-  expect(await x.estimateReturn(split(`4.0000 BTC`), EOSDT)).toStrictEqual(
-    split(`3.6294 EOSDT`)
+  expect(await x.estimateReturn(asset(`4.0000 BTC`), EOSDT)).toStrictEqual(
+    asset(`3.6294 EOSDT`)
   );
 
-  expect(await x.estimateReturn(split(`4.5000 EOS`), EOSDT)).toStrictEqual(
-    split(`3.4838 EOSDT`)
+  expect(await x.estimateReturn(asset(`4.5000 EOS`), EOSDT)).toStrictEqual(
+    asset(`3.4838 EOSDT`)
   );
 });
 
 test.skip("bancor calculator - estimate cost works", async () => {
   let bancorCalculator = new BancorCalculator();
   expect(
-    await bancorCalculator.estimateCost(split(`3.6294 EOSDT`), BTC)
-  ).toStrictEqual(split(`4.0000 BTC`));
+    await bancorCalculator.estimateCost(asset(`3.6294 EOSDT`), BTC)
+  ).toStrictEqual(asset(`4.0000 BTC`));
 
   expect(
-    await bancorCalculator.estimateCost(split(`3.4838 EOSDT`), BTC)
-  ).toStrictEqual(split(`4.0000 BTC`));
+    await bancorCalculator.estimateCost(asset(`3.4838 EOSDT`), BTC)
+  ).toStrictEqual(asset(`4.0000 BTC`));
 });
 
 test("fee works", () => {
-  expect(bancorx.chargeFee(split("1.0000 EOS"), 0.02, 2)).toStrictEqual(
-    split("0.9604 EOS")
+  expect(bancorx.chargeFee(asset("1.0000 EOS"), 0.02, 2)).toStrictEqual(
+    asset("0.9604 EOS")
   );
-  expect(bancorx.chargeFee(split("1.0000 EOS"), 0.02, 1)).toStrictEqual(
-    split("0.9800 EOS")
+  expect(bancorx.chargeFee(asset("1.0000 EOS"), 0.02, 1)).toStrictEqual(
+    asset("0.9800 EOS")
   );
 });
 
 test("works with a difference in precision", async () => {
   expect(
     bancorx.calculateCost(
-      split("5.0001 EMT"),
-      split("1.0000000000 BNT"),
-      split(`0.1666638889 BNT`)
+      asset("5.0001 EMT"),
+      asset("1.0000000000 BNT"),
+      asset(`0.1666638889 BNT`)
     )
-  ).toStrictEqual(split(`0.9999 EMT`));
+  ).toStrictEqual(asset(`0.9999 EMT`));
 });
 
 test("calculate Smart Return works as expected", async () => {
-  const deposit = split(`32.0000 BLU`);
-  const blueBalance = split("131.0000 BLU");
-  const smartBalance = split("200.0000 BLURED");
+  const deposit = asset(`32.0000 BLU`);
+  const blueBalance = asset("131.0000 BLU");
+  const smartBalance = asset("200.0000 BLURED");
 
   expect(
     bancorx.calculateReserveToSmart(deposit, blueBalance, smartBalance)
-  ).toStrictEqual(split("23.0941 BLURED"));
+  ).toStrictEqual(asset("23.0941 BLURED"));
 });
 
 test("calculate smart to reserve", async () => {
-  const smartSupply = split("200.0000 BLURED");
-  const sellingTokens = split("32.0000 BLURED");
-  const blueBalance = split("131.0000 BLU");
-  const reserveTokens = split("38.5664 BLU");
+  const smartSupply = asset("200.0000 BLURED");
+  const sellingTokens = asset("32.0000 BLURED");
+  const blueBalance = asset("131.0000 BLU");
+  const reserveTokens = asset("38.5664 BLU");
 
   expect(
     bancorx.calculateSmartToReserve(sellingTokens, blueBalance, smartSupply)
@@ -899,9 +899,9 @@ test("calculate smart to reserve", async () => {
 });
 
 test("more smart to reserve", async () => {
-  const smartSupply = split("1000.0000 EOSBTC");
-  const btcBalance = split("0.6500 BTC");
-  const eosBalance = split("20.0000 BTC");
+  const smartSupply = asset("1000.0000 EOSBTC");
+  const btcBalance = asset("0.6500 BTC");
+  const eosBalance = asset("20.0000 BTC");
 
   expect(
     bancorx.calculateSmartToReserve(smartSupply, btcBalance, smartSupply)
@@ -911,101 +911,101 @@ test("more smart to reserve", async () => {
 test("liquidate works", () => {
   expect(
     bancorx.liquidate(
-      split("100.0000 BNTEOS"),
-      split("2.0000 EOS"),
-      split("200.0000 BNTEOS")
+      asset("100.0000 BNTEOS"),
+      asset("2.0000 EOS"),
+      asset("200.0000 BNTEOS")
     )
-  ).toStrictEqual(split("1.0000 EOS"));
+  ).toStrictEqual(asset("1.0000 EOS"));
 });
 
 test("calculate liquidate works", () => {
   expect(
     bancorx.calculateLiquidateCost(
-      split("1.0000 EOS"),
-      split("2.0000 EOS"),
-      split("200.0000 BNTEOS")
+      asset("1.0000 EOS"),
+      asset("2.0000 EOS"),
+      asset("200.0000 BNTEOS")
     )
-  ).toStrictEqual(split("100.0000 BNTEOS"));
+  ).toStrictEqual(asset("100.0000 BNTEOS"));
 });
 
 test("random fund tests", () => {
   expect(
     bancorx.calculateFundReturn(
-      split("0.1884540589 BNT"),
-      split("1.8468895414 BNT"),
-      split("1495.0000 BNTKRX")
+      asset("0.1884540589 BNT"),
+      asset("1.8468895414 BNT"),
+      asset("1495.0000 BNTKRX")
     )
-  ).toStrictEqual(split("152.5477 BNTKRX"));
+  ).toStrictEqual(asset("152.5477 BNTKRX"));
 
   expect(
     bancorx.fund(
-      split("152.5477 BNTKRX"),
-      split("1.8468895414 BNT"),
-      split("1495.0000 BNTKRX")
+      asset("152.5477 BNTKRX"),
+      asset("1.8468895414 BNT"),
+      asset("1495.0000 BNTKRX")
     )
-  ).toStrictEqual(split("0.1884540145 BNT"));
+  ).toStrictEqual(asset("0.1884540145 BNT"));
 
   expect(
     bancorx.fund(
-      split("1000.00000000 BNTEOS"),
-      split("990.0000 EOS"),
-      split("99000.00000000 BNTEOS")
+      asset("1000.00000000 BNTEOS"),
+      asset("990.0000 EOS"),
+      asset("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("9.9999 EOS"));
+  ).toStrictEqual(asset("9.9999 EOS"));
 
   expect(
     bancorx.calculateFundReturn(
-      split("10.0000 EOS"),
-      split("990.0000 EOS"),
-      split("99000.00000000 BNTEOS")
+      asset("10.0000 EOS"),
+      asset("990.0000 EOS"),
+      asset("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("1000.00000000 BNTEOS"));
+  ).toStrictEqual(asset("1000.00000000 BNTEOS"));
 
   expect(
     bancorx.fund(
-      split("1000.00000000 BNTEOS"),
-      split("990.00000000 BNT"),
-      split("99000.00000000 BNTEOS")
+      asset("1000.00000000 BNTEOS"),
+      asset("990.00000000 BNT"),
+      asset("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("9.99999999 BNT"));
+  ).toStrictEqual(asset("9.99999999 BNT"));
 
   expect(
     bancorx.fund(
-      split("2000.00000000 BNTEOS"),
-      split("990.00000000 BNT"),
-      split("99000.00000000 BNTEOS")
+      asset("2000.00000000 BNTEOS"),
+      asset("990.00000000 BNT"),
+      asset("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("19.99999999 BNT"));
+  ).toStrictEqual(asset("19.99999999 BNT"));
 
   expect(
     bancorx.fund(
-      split("250.0000 BNTEOS"),
-      split("6.0000 EOS"),
-      split("1000.0000 BNTEOS")
+      asset("250.0000 BNTEOS"),
+      asset("6.0000 EOS"),
+      asset("1000.0000 BNTEOS")
     )
-  ).toStrictEqual(split("1.5000 EOS"));
+  ).toStrictEqual(asset("1.5000 EOS"));
 
   expect(
     bancorx.fund(
-      split("250.0000 BNTEOS"),
-      split("7.5000 EOS"),
-      split("1250.0000 BNTEOS")
+      asset("250.0000 BNTEOS"),
+      asset("7.5000 EOS"),
+      asset("1250.0000 BNTEOS")
     )
-  ).toStrictEqual(split("1.5000 EOS"));
+  ).toStrictEqual(asset("1.5000 EOS"));
 
   expect(
     bancorx.fund(
-      split("148.50000000 BNTEOS"),
-      split("990.0000 EOS"),
-      split("99000.00000000 BNTEOS")
+      asset("148.50000000 BNTEOS"),
+      asset("990.0000 EOS"),
+      asset("99000.00000000 BNTEOS")
     )
-  ).toStrictEqual(split("1.4850 EOS"));
+  ).toStrictEqual(asset("1.4850 EOS"));
 
   expect(
     bancorx.fund(
-      split("657.94500123 BNTEOS"),
-      split("991.4850 EOS"),
-      split("99148.50000000 BNTEOS")
+      asset("657.94500123 BNTEOS"),
+      asset("991.4850 EOS"),
+      asset("99148.50000000 BNTEOS")
     )
-  ).toStrictEqual(split("6.5794 EOS"));
+  ).toStrictEqual(asset("6.5794 EOS"));
 });

@@ -1,6 +1,6 @@
 {
     "name": "bancorx",
-    "version": "0.2.92",
+    "version": "0.3.0",
     "description": "BancorX Utility",
     "main": "build/index.js",
     "types": "build/index.d.ts",
@@ -23,22 +23,14 @@
         "docs": "tsc && documentation readme index.js -s API"
     },
     "dependencies": {
-        "decimal.js": "^10.2.0",
-        "eos-common": "^0.1.36",
-        "underscore": "^1.9.1",
-        "waait": "^1.0.5"
+        "decimal.js": "10.x",
+        "eos-common": "0.x"
     },
     "devDependencies": {
         "@types/jest": "*",
-        "@types/underscore": "^1.9.3",
-        "documentation": "*",
         "jest": "*",
-        "prettier": "^1.18.2",
         "ts-jest": "*",
         "ts-node": "*",
-        "tslint": "*",
-        "tslint-config-prettier": "^1.18.0",
-        "tslint-plugin-prettier": "^2.0.1",
         "typescript": "*"
     }
 }
