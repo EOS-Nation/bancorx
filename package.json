@@ -24,7 +24,8 @@
     },
     "dependencies": {
         "decimal.js": "10.x",
-        "eos-common": "0.x"
+        "eos-common": "0.x",
+        "lodash": "^4.17.19"
     },
     "devDependencies": {
         "@types/jest": "*",

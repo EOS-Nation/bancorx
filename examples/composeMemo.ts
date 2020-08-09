@@ -1,6 +1,6 @@
-import * as bancorx from "../src";
+import * as bancorx from "..";
 
-const { CUSD, BNT } = bancorx.relays;
+// const { CUSD, BNT } = bancorx.relays;
 const minReturn = "3.17";
 const destAccount = "<account>";
 const version = 1;
