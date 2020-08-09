@@ -1,13 +1,15 @@
 import * as bancorx from "..";
 import { asset } from "eos-common";
 
-const balanceFrom = asset(`6402.0273238755 BNT`);
-const balanceTo = asset(`2299947.3063 VIG`);
-const amount = asset(`1.0000000000 BNT`);
+const decmialFee = 0.002;
+const balanceFrom = asset('2300771.8177 VIG');
+const balanceTo = asset('6399.7216425395 BNT');
+const amount = asset('100.0000 VIG');
 const result = bancorx.calculateReturn(balanceFrom, balanceTo, amount);
-// => Asset type of 359.1968 VIG
+// => Asset type of 0.2781433365 BNT
 console.log(result.reward.toString());
 
-const fee = bancorx.chargeFee(result.reward, 0.002, 2);
-// => Asset type of 357.7614 VIG
-console.log(fee.toString());
+const magnitude = 2;
+const resultFee = bancorx.chargeFee(result.reward, decmialFee, magnitude);
+// => Asset type of 0.2770318757 BNT
+console.log(resultFee.toString());
